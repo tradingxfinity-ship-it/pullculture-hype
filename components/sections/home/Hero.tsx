@@ -34,7 +34,7 @@ export default function Hero() {
   return (
     <section
       ref={root}
-      className="relative -mt-[var(--topbar-h)] flex h-[clamp(440px,56vh,540px)] items-end overflow-hidden bg-ink-0"
+      className="relative -mt-[var(--topbar-h)] flex h-[clamp(280px,40vh,400px)] items-end overflow-hidden bg-ink-0"
     >
       <div ref={img} className="absolute inset-0 will-change-transform" aria-hidden>
         <Image
@@ -43,15 +43,15 @@ export default function Hero() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[72%_center] md:object-right"
+          className="object-cover object-[72%_center] md:object-[right_35%]"
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/35 to-transparent md:via-black/20" aria-hidden />
       <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/80 to-transparent" aria-hidden />
       <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black to-transparent" aria-hidden />
 
-      <div className="frame relative w-full pb-10 md:pb-14">
-        <h1 className="text-[clamp(2.75rem,6vw,6rem)] font-bold leading-[0.9] tracking-[-0.055em] text-fg">
+      <div className="frame relative w-full pb-6 md:pb-8">
+        <h1 className="text-[clamp(2.25rem,4.6vw,4.5rem)] font-bold leading-[0.9] tracking-[-0.055em] text-fg">
           <span className="line-mask">
             <span>Rip packs.</span>
           </span>
@@ -64,13 +64,13 @@ export default function Hero() {
 
         <div
           data-reveal=""
-          className="mt-8 flex flex-wrap items-center gap-3 [.is-in_&]:translate-y-0 [.is-in_&]:opacity-100"
+          className="mt-5 flex flex-wrap items-center gap-3 [.is-in_&]:translate-y-0 [.is-in_&]:opacity-100"
           style={{ "--reveal-delay": "400ms" } as React.CSSProperties}
         >
-          <Button href="/pack" size="lg" arrow magnetic>
+          <Button href="/pack" size="md" arrow magnetic>
             Rip A Pack
           </Button>
-          <Button href="/marketplace" variant="secondary" size="lg" className="bg-black/30 backdrop-blur-sm">
+          <Button href="/marketplace" variant="secondary" size="md" className="bg-black/30 backdrop-blur-sm">
             Marketplace
           </Button>
         </div>

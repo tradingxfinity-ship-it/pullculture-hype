@@ -1,31 +1,29 @@
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import PackCard from "@/components/cards/PackCard";
-import SectionHeader from "@/components/ui/SectionHeader";
 import HScroll from "@/components/ui/HScroll";
 import { featuredPackOrder, getPack } from "@/lib/data";
 
+// Slim header row so the packs sit right under the banner.
 export default function RipAPack() {
   const list = featuredPackOrder.map(getPack).filter(Boolean) as NonNullable<ReturnType<typeof getPack>>[];
 
   return (
-    <section className="relative bg-ink-0 pb-section pt-12 md:pt-16">
-      <div className="frame">
-        <SectionHeader
-          index="01"
-          label="Rip A Pack"
-          title={[
-            "Rip a pack.",
-            <>
-              Chase the <em className="font-serif font-normal italic tracking-[-0.02em] text-accent">hit.</em>
-            </>,
-          ]}
-          aside="Fifteen curated packs across five categories and three tiers. Clear odds, no bulk, every hit shippable."
-          action={{ href: "/pack", label: "See all packs" }}
-          className="mb-14 md:mb-20"
-        />
+    <section className="relative bg-ink-0 pb-section pt-6 md:pt-8">
+      <div className="frame mb-5 flex items-center gap-4 md:mb-6">
+        <h2 className="flex items-baseline gap-3 text-xl font-bold tracking-[-0.03em] text-fg md:text-2xl">
+          <span className="font-mono text-[11px] font-normal tracking-[0.12em] text-accent">01</span>
+          Rip A Pack
+        </h2>
+        <span className="h-px flex-1 bg-line" aria-hidden />
+        <Link href="/pack" className="group inline-flex items-center gap-2 text-sm font-medium text-fg">
+          <span className="link-u">See all</span>
+          <ArrowUpRight className="arrow-nudge h-4 w-4 text-accent" />
+        </Link>
       </div>
       <HScroll label="Packs">
         {list.map((p, i) => (
-          <PackCard key={p.name} pack={p} index={i} className="w-[72vw] shrink-0 sm:w-[44vw] md:w-[36vw] lg:w-[26vw] xl:w-[22vw] 2xl:w-[340px]" />
+          <PackCard key={p.name} pack={p} index={i} className="w-[60vw] shrink-0 sm:w-[34vw] md:w-[26vw] lg:w-[19vw] xl:w-[17vw] 2xl:w-[290px]" />
         ))}
       </HScroll>
     </section>
