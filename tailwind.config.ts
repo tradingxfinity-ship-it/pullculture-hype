@@ -82,6 +82,7 @@ const config: Config = {
           "0%, 100%": { boxShadow: "0 0 0 0 rgba(117,251,181,0.55)" },
           "50%": { boxShadow: "0 0 0 6px rgba(117,251,181,0)" },
         },
+        spin_y: { from: { transform: "rotateY(0deg)" }, to: { transform: "rotateY(360deg)" } },
         float: {
           "0%, 100%": { transform: "translate3d(0,0,0) rotate(var(--rot, 0deg))" },
           "50%": { transform: "translate3d(0,-10px,0) rotate(var(--rot, 0deg))" },
@@ -90,6 +91,7 @@ const config: Config = {
       animation: {
         marquee: "marquee var(--marquee-dur, 40s) linear infinite",
         "pulse-dot": "pulse_dot 2s var(--ease-in-out) infinite",
+        "spin-y": "spin_y 9s linear infinite",
         float: "float 7s var(--ease-in-out) infinite",
       },
     },

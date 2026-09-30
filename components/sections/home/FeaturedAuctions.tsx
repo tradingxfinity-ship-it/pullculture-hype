@@ -36,13 +36,30 @@ export default function FeaturedAuctions() {
               <div className="media relative aspect-[4/3.4] rounded-lg border border-line bg-[radial-gradient(ellipse_at_50%_40%,#1a1a1a_0%,#070707_70%)] sm:aspect-[4/3]">
                 <div className="grid-bg absolute inset-0 opacity-50" aria-hidden />
                 <div className="glow absolute left-1/2 top-1/2 h-3/4 w-2/3 -translate-x-1/2 -translate-y-1/2" aria-hidden />
-                <Image
-                  src={f.image}
-                  alt={`${f.player} ${f.title}`}
-                  fill
-                  sizes="(min-width:1024px) 50vw, 90vw"
-                  className="object-contain p-[9%] drop-shadow-[0_40px_50px_rgba(0,0,0,0.9)]"
-                />
+                {/* Slab turntable: continuous Y-axis spin, paused on hover */}
+                <div className="absolute inset-[9%] flex items-center justify-center [perspective:1400px]">
+                  <div className="relative aspect-[267/449] h-full animate-spin-y [transform-style:preserve-3d] group-hover:[animation-play-state:paused]">
+                    <div className="absolute inset-0 [backface-visibility:hidden]">
+                      <Image
+                        src={f.image}
+                        alt={`${f.player} ${f.title}`}
+                        fill
+                        sizes="(min-width:1024px) 30vw, 60vw"
+                        className="object-contain drop-shadow-[0_40px_50px_rgba(0,0,0,0.9)]"
+                      />
+                    </div>
+                    <div
+                      className="absolute inset-0 grid place-items-center rounded-md border border-line-strong bg-gradient-to-br from-ink-5 to-ink-2 [backface-visibility:hidden] [transform:rotateY(180deg)]"
+                      aria-hidden
+                    >
+                      <div className="text-center">
+                        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">Cert</p>
+                        <p className="mt-1 font-mono text-lg text-fg">63140708</p>
+                        <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-accent">PSA verified</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div className="absolute inset-x-4 top-4 flex items-center justify-between md:inset-x-6 md:top-6">
                   <Tag tone="solid">Lot of the week</Tag>
                   <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-fg-muted">
