@@ -7,7 +7,7 @@ export default function RipAPack() {
   const list = featuredPackOrder.map(getPack).filter(Boolean) as NonNullable<ReturnType<typeof getPack>>[];
 
   return (
-    <section className="relative bg-ink-0 py-section">
+    <section className="relative bg-ink-0 pb-section pt-12 md:pt-16">
       <div className="frame">
         <SectionHeader
           index="01"
