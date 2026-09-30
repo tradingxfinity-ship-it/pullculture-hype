@@ -48,15 +48,15 @@ export default function FeaturedAuctions() {
                         className="object-contain drop-shadow-[0_40px_50px_rgba(0,0,0,0.9)]"
                       />
                     </div>
-                    <div
-                      className="absolute inset-0 grid place-items-center rounded-md border border-line-strong bg-gradient-to-br from-ink-5 to-ink-2 [backface-visibility:hidden] [transform:rotateY(180deg)]"
-                      aria-hidden
-                    >
-                      <div className="text-center">
-                        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-fg-dim">Cert</p>
-                        <p className="mt-1 font-mono text-lg text-fg">63140708</p>
-                        <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-accent">PSA verified</p>
-                      </div>
+                    {/* Back face shows the front art for now, so the slab reads the same from both sides */}
+                    <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]" aria-hidden>
+                      <Image
+                        src={f.image}
+                        alt=""
+                        fill
+                        sizes="(min-width:1024px) 30vw, 60vw"
+                        className="object-contain drop-shadow-[0_40px_50px_rgba(0,0,0,0.9)]"
+                      />
                     </div>
                   </div>
                 </div>
