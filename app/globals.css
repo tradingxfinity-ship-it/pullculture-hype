@@ -1,0 +1,346 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------
+   Design tokens
+   ------------------------------------------------------------------ */
+:root {
+  /* Surfaces — stepped blacks so sections separate without borders */
+  --bg-0: #000000;
+  --bg-1: #050505;
+  --bg-2: #090909;
+  --bg-3: #0d0d0d;
+  --bg-4: #141414;
+  --bg-5: #1c1c1c;
+
+  /* Type */
+  --fg: #ffffff;
+  --fg-2: #ededed;
+  --fg-muted: #a1a1a1;
+  --fg-dim: #727272;
+
+  /* RGB channels so Tailwind opacity modifiers (bg-accent/40) work */
+  --fg-rgb: 255 255 255;
+  --accent-rgb: 117 251 181;
+  --silver-rgb: 212 215 220;
+  --gold-rgb: 232 196 106;
+  --platinum-rgb: 185 198 214;
+
+  /* Signature accent */
+  --accent: #75fbb5;
+  --accent-ink: #03140b;
+  --accent-glow: rgba(117, 251, 181, 0.15);
+  --accent-soft: rgba(117, 251, 181, 0.08);
+
+  /* Lines */
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.18);
+
+  /* Pack tiers */
+  --tier-silver: #d4d7dc;
+  --tier-gold: #e8c46a;
+  --tier-platinum: #b9c6d6;
+
+  /* Radii */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+
+  /* Layout */
+  --rail-w: 248px;
+  --gutter: clamp(16px, 3.2vw, 48px);
+  --section-y: clamp(72px, 10vw, 152px);
+  --topbar-h: 64px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 300ms;
+  --dur-base: 500ms;
+  --dur-slow: 700ms;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --rail-w: 0px;
+    --topbar-h: 60px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+@layer base {
+  html {
+    background: var(--bg-0);
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--bg-0);
+    color: var(--fg-2);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  :focus-visible {
+    outline: 1.5px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  h1, h2, h3, h4 {
+    color: var(--fg);
+    font-weight: 700;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  img {
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-0);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1f1f1f;
+    border: 3px solid var(--bg-0);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2e2e2e;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Reusable primitives
+   ------------------------------------------------------------------ */
+@layer components {
+  /* Page frame — the column to the right of the rail */
+  .frame {
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+
+  .grid-12 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: 16px;
+  }
+  @media (min-width: 768px) {
+    .grid-12 {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      column-gap: 20px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .grid-12 {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: 24px;
+    }
+  }
+
+  /* Small uppercase metadata */
+  .eyebrow {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.6875rem;
+    line-height: 1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+
+  .hairline {
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* Animated underline link */
+  .link-u {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+  }
+  .link-u::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .link-u:hover::after,
+  .group:hover .link-u::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Cards: one hover language for every image tile */
+  .media {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-3);
+    isolation: isolate;
+  }
+  .media img {
+    transition: transform var(--dur-slow) var(--ease-out), filter var(--dur-slow) var(--ease-out);
+  }
+  .group:hover .media img {
+    transform: scale(1.045);
+  }
+  .media-mono img {
+    filter: grayscale(1) contrast(1.05) brightness(0.85);
+  }
+  .group:hover .media-mono img {
+    filter: grayscale(0) contrast(1) brightness(1);
+  }
+
+  .arrow-nudge {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .group:hover .arrow-nudge {
+    transform: translate(3px, -3px);
+  }
+  .arrow-nudge-x {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .group:hover .arrow-nudge-x {
+    transform: translateX(4px);
+  }
+
+  /* Plus-mark corner ticks for framed media */
+  .ticks {
+    position: relative;
+  }
+  .ticks::before,
+  .ticks::after {
+    content: "+";
+    position: absolute;
+    font-family: var(--font-mono), monospace;
+    font-size: 12px;
+    line-height: 1;
+    color: var(--fg-dim);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .ticks::before {
+    top: -7px;
+    left: -4px;
+  }
+  .ticks::after {
+    bottom: -7px;
+    right: -4px;
+  }
+
+  /* Subtle dotted grid backdrop */
+  .grid-bg {
+    background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
+    background-size: calc((100% - 1px) / 12) 100%;
+    mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 80%, transparent);
+  }
+
+  .glow {
+    background: radial-gradient(closest-side, rgba(117, 251, 181, 0.16), rgba(117, 251, 181, 0.04) 55%, transparent 100%);
+    filter: blur(20px);
+    pointer-events: none;
+  }
+
+  /* "PULL CULTURE" set edge-to-edge in the content column (text ≈ 6.65em wide) */
+  .masthead {
+    font-size: calc((100vw - var(--rail-w) - 2 * var(--gutter) - 12px) / 6.72);
+    font-weight: 900;
+    line-height: 0.8;
+    letter-spacing: -0.065em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--line-strong);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Reveal-on-scroll (driven by components/ui/Reveal.tsx) */
+  [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  [data-reveal="in"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Line-mask headline reveal */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.06em;
+    margin-bottom: -0.06em;
+  }
+  .line-mask > span {
+    display: block;
+    transform: translate3d(0, 105%, 0);
+    transition: transform 1s var(--ease-out);
+    transition-delay: var(--line-delay, 0ms);
+  }
+  [data-reveal="in"] .line-mask > span,
+  .is-in .line-mask > span {
+    transform: none;
+  }
+}
+
+/* Film grain overlay — sits above everything, never interactive */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  [data-reveal],
+  .line-mask > span {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
