@@ -32,6 +32,7 @@ export const socials = [
   { label: "Instagram", href: "#" },
   { label: "X", href: "#" },
   { label: "TikTok", href: "#" },
+  { label: "Discord", href: "#" },
 ];
 
 export const isActive = (pathname: string, href: string) =>
