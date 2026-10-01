@@ -1,5 +1,8 @@
+import Image from "next/image";
 import Reveal from "@/components/ui/Reveal";
 import { pullTiers } from "@/lib/data";
+
+const PLACEHOLDER_SLAB = "/assets/cards/Pack-02.webp";
 
 // "Available Pulls" — each odds tier is a row with a sticky label and a
 // grid of slab silhouettes. The grail tier gets the spotlight.
@@ -39,12 +42,20 @@ export default function PullTiers() {
                       <span>{tier.name}</span>
                       <span>#{String(i + 1).padStart(3, "0")}</span>
                     </div>
+                    {/* Placeholder slab art until per-card images exist */}
                     <div
-                      className={`mx-auto rounded-[6px] border border-line-strong bg-gradient-to-br from-white/[0.06] to-transparent transition-transform duration-slow ease-out group-hover:-translate-y-1 group-hover:rotate-[-2deg] ${
-                        grail ? "aspect-[3/4] h-[52%]" : "hidden h-[46%] w-[62%] sm:block"
+                      className={`relative mx-auto aspect-[147/250] transition-transform duration-slow ease-out group-hover:-translate-y-1 group-hover:rotate-[-3deg] ${
+                        grail ? "h-[64%]" : "hidden h-[62%] sm:block"
                       }`}
-                      aria-hidden
-                    />
+                    >
+                      <Image
+                        src={PLACEHOLDER_SLAB}
+                        alt={`${name} graded card`}
+                        fill
+                        sizes={grail ? "220px" : "140px"}
+                        className="object-contain drop-shadow-[0_14px_18px_rgba(0,0,0,0.7)]"
+                      />
+                    </div>
                     <div>
                       <p className={`font-bold tracking-[-0.03em] ${grail ? "text-4xl text-fg" : "text-[15px] text-fg-2 sm:text-lg"}`}>{name}</p>
                       <p className="mt-1 font-mono text-[11px] text-fg-dim">{tier.odds} odds</p>
