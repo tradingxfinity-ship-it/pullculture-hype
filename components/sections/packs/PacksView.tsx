@@ -34,8 +34,10 @@ export default function PacksView({ active }: { active?: Category }) {
         <div className="pointer-events-none absolute bottom-0 right-[var(--gutter)] hidden w-[min(34vw,500px)] translate-y-[52%] md:block" aria-hidden>
           <div className="glow absolute inset-[10%]" />
           {active && (
-            // Category icon behind the packs, faded out toward them, replaying its signature move
-            <div className="absolute left-1/2 top-[-40%] w-[50%] -translate-x-1/2 opacity-25 [mask-image:linear-gradient(to_bottom,#000_35%,transparent_90%)]">
+            // Category icon behind the packs, faded out toward them, replaying its signature move.
+            // The top padding gives the mask room for the icon's flight, so only the header edge
+            // (the nav) ever clips it.
+            <div className="absolute bottom-[58%] left-1/2 w-[50%] -translate-x-1/2 pt-[30%] opacity-25 [mask-image:linear-gradient(to_bottom,#000_60%,transparent_94%)]">
               <LoopingSportIcon slug={active} className="ico-slow h-auto w-full text-fg" />
             </div>
           )}
