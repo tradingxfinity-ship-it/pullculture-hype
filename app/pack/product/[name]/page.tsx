@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ListChecks, RefreshCcw, ShieldCheck, Truck } from "lucide-react";
+import { ArrowLeft, RefreshCcw, ShieldCheck, Truck } from "lucide-react";
 import BuyPanel from "@/components/sections/packs/BuyPanel";
 import PullTiers from "@/components/sections/packs/PullTiers";
+import HitList from "@/components/sections/packs/HitList";
 import SectionHeader from "@/components/ui/SectionHeader";
 import Reveal from "@/components/ui/Reveal";
 import SplitHeading from "@/components/ui/SplitHeading";
 import Tag from "@/components/ui/Tag";
-import Button from "@/components/ui/Button";
 import PackCard from "@/components/cards/PackCard";
 import { getPack, packDescription, packs, packsIn, pullTiers, usd } from "@/lib/data";
 
@@ -106,11 +106,7 @@ export default async function ProductPage({ params }: { params: Promise<{ name: 
             index="→"
             label="Hit list"
             title={["Available", <>Pulls<span className="text-accent">.</span></>]}
-            aside={
-              <Button variant="secondary" size="md">
-                <ListChecks className="h-4 w-4" /> View Hit List
-              </Button>
-            }
+            aside={<HitList packName={pack.name} />}
             className="mb-12 md:mb-16"
           />
           <PullTiers />

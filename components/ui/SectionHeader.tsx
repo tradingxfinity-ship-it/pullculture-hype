@@ -31,7 +31,12 @@ export default function SectionHeader({ index, label, title, aside, action, clas
       />
       {(aside || action) && (
         <div className="col-span-4 flex flex-col items-start gap-6 md:col-span-8 lg:col-span-4 lg:items-end lg:text-right">
-          {aside && <p className="max-w-sm text-[15px] leading-relaxed text-fg-muted">{aside}</p>}
+          {aside &&
+            (typeof aside === "string" ? (
+              <p className="max-w-sm text-[15px] leading-relaxed text-fg-muted">{aside}</p>
+            ) : (
+              <div>{aside}</div>
+            ))}
           {action && (
             <Link href={action.href} className="group inline-flex items-center gap-2 text-sm font-medium text-fg">
               <span className="link-u">{action.label ?? "See all"}</span>
