@@ -822,6 +822,22 @@
   filter: blur(20px);
 }
 
+/* Wizard step transition: slides in from the direction of travel
+   (--dir: 1 forward, -1 back). Replays whenever a step is unhidden. */
+.step-in:not([hidden]) {
+  animation: step-in 520ms var(--ease-out) both;
+}
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--dir, 1) * 28px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Film grain overlay — sits above everything, never interactive */
 .grain {
   position: fixed;
