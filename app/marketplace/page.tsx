@@ -26,7 +26,7 @@ export default function MarketplacePage() {
                   <I
                     aria-hidden
                     strokeWidth={1}
-                    className="h-[clamp(48px,7.6vw,128px)] w-auto text-fg-2 transition-[color,transform,filter] duration-slow ease-out hover:-translate-y-2 hover:rotate-[-10deg] hover:text-accent hover:[filter:drop-shadow(0_0_24px_rgba(117,251,181,0.45))]"
+                    className="h-[clamp(40px,5.4vw,92px)] w-auto text-fg-2 transition-[color,transform,filter] duration-slow ease-out hover:-translate-y-2 hover:rotate-[-10deg] hover:text-accent hover:[filter:drop-shadow(0_0_24px_rgba(117,251,181,0.45))]"
                   />
                   <span className="sr-only">{c.label}</span>
                 </li>

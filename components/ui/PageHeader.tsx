@@ -37,7 +37,7 @@ export default function PageHeader({
               lines={title}
               className={
                 compact
-                  ? "text-[clamp(2.25rem,5.2vw,5rem)] font-bold leading-[0.95] tracking-[-0.05em] sm:whitespace-nowrap"
+                  ? "text-[clamp(2.75rem,7vw,7rem)] font-bold leading-[0.9] tracking-[-0.055em] sm:whitespace-nowrap"
                   : "text-display-lg font-bold"
               }
             />
