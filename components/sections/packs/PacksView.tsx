@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import PackCard from "@/components/cards/PackCard";
 import Reveal from "@/components/ui/Reveal";
 import Tabs from "@/components/ui/Tabs";
+import LoopingSportIcon from "@/components/ui/LoopingSportIcon";
 import { categories, getPack, packs, packsIn, tierPrice, trendingPacks, usd, type Category } from "@/lib/data";
 
 const tabs = [
@@ -32,6 +33,12 @@ export default function PacksView({ active }: { active?: Category }) {
         {/* Pack trio rising out of the tab bar — bottom half clipped by the header edge */}
         <div className="pointer-events-none absolute bottom-0 right-[var(--gutter)] hidden w-[min(34vw,500px)] translate-y-[52%] md:block" aria-hidden>
           <div className="glow absolute inset-[10%]" />
+          {active && (
+            // Category icon behind the packs, faded out toward them, replaying its signature move
+            <div className="absolute left-1/2 top-[-40%] w-[50%] -translate-x-1/2 opacity-25 [mask-image:linear-gradient(to_bottom,#000_35%,transparent_90%)]">
+              <LoopingSportIcon slug={active} className="h-auto w-full text-fg" />
+            </div>
+          )}
           <Image src="/assets/cards/tier-packs.webp" alt="" width={1495} height={912} priority sizes="34vw" className="relative h-auto w-full drop-shadow-[0_-10px_40px_rgba(0,0,0,0.6)]" />
         </div>
         <div className="frame relative z-10 pb-8 pt-8 md:pb-10 md:pt-10">
