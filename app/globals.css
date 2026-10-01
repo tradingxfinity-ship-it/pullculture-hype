@@ -317,6 +317,103 @@
   }
 }
 
+/* ------------------------------------------------------------------
+   Button motion (components/ui/Button.tsx)
+   ------------------------------------------------------------------ */
+
+/* Letter roll: each glyph carries a copy of itself below via
+   text-shadow, then slides up one line in a staggered wave. */
+.btn-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+.btn-word {
+  display: inline-flex;
+  overflow: hidden;
+  height: 1.3em;
+  line-height: 1.3em;
+}
+.btn-ch {
+  display: inline-block;
+  text-shadow: 0 1.3em currentColor;
+  transition: transform 600ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 14ms);
+}
+.btn:hover .btn-ch,
+.btn:focus-visible .btn-ch {
+  transform: translateY(-1.3em);
+}
+
+/* Cursor spotlight */
+.btn-spot {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 400ms var(--ease-out);
+  background: radial-gradient(110px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.55), transparent 65%);
+}
+.btn-primary .btn-spot {
+  mix-blend-mode: soft-light;
+}
+.btn-secondary .btn-spot {
+  background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(117, 251, 181, 0.22), transparent 65%);
+}
+.btn:hover .btn-spot {
+  opacity: 1;
+}
+
+/* Primary: light streak sweeps across once per hover */
+.btn-shine {
+  position: absolute;
+  inset: -2px;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.7) 48%, rgba(255, 255, 255, 0.15) 55%, transparent 70%);
+  transform: translateX(-130%);
+}
+.btn:hover .btn-shine {
+  transform: translateX(130%);
+  transition: transform 1000ms var(--ease-out);
+}
+
+/* Secondary: liquid fill spreads from where the pointer entered */
+.btn-fill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--accent);
+  clip-path: circle(0px at var(--mx, 50%) var(--my, 50%));
+  transition: clip-path 650ms var(--ease-out);
+}
+.btn:hover .btn-fill,
+.btn:focus-visible .btn-fill {
+  clip-path: circle(150% at var(--mx, 50%) var(--my, 50%));
+}
+
+/* Click ripple */
+.btn-ripple {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 999px;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 70%);
+  transform: translate(-50%, -50%) scale(0);
+  animation: btn-ripple 650ms var(--ease-out) forwards;
+}
+.btn-secondary .btn-ripple {
+  background: radial-gradient(closest-side, rgba(3, 20, 11, 0.35), rgba(3, 20, 11, 0) 70%);
+}
+@keyframes btn-ripple {
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
 /* Film grain overlay — sits above everything, never interactive */
 .grain {
   position: fixed;
