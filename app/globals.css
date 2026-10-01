@@ -625,6 +625,15 @@
   100% { opacity: 0; transform: scale(0.4) rotate(90deg); }
 }
 
+/* Slow variant for backdrop art: every move at half speed */
+.ico-slow.ico-football.is-playing { animation-duration: 2300ms; }
+.ico-slow.ico-basketball.is-playing { animation-duration: 2500ms; }
+.ico-slow.ico-baseball.is-playing { animation-duration: 2000ms; }
+.ico-slow.ico-pokemon.is-playing,
+.ico-slow.ico-pokemon.is-playing .pb-btn { animation-duration: 3400ms; }
+.ico-slow.ico-multi-sport.is-playing { animation-duration: 2600ms; }
+.ico-slow.ico-multi-sport.is-playing .tr-spark { animation-duration: 1800ms; }
+
 /* Film grain overlay — sits above everything, never interactive */
 .grain {
   position: fixed;

@@ -36,7 +36,7 @@ export default function PacksView({ active }: { active?: Category }) {
           {active && (
             // Category icon behind the packs, faded out toward them, replaying its signature move
             <div className="absolute left-1/2 top-[-40%] w-[50%] -translate-x-1/2 opacity-25 [mask-image:linear-gradient(to_bottom,#000_35%,transparent_90%)]">
-              <LoopingSportIcon slug={active} className="h-auto w-full text-fg" />
+              <LoopingSportIcon slug={active} className="ico-slow h-auto w-full text-fg" />
             </div>
           )}
           <Image src="/assets/cards/tier-packs.webp" alt="" width={1495} height={912} priority sizes="34vw" className="relative h-auto w-full drop-shadow-[0_-10px_40px_rgba(0,0,0,0.6)]" />
