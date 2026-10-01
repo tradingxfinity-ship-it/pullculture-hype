@@ -1,5 +1,7 @@
 // Single source for every navigation surface (rail, mobile menu, footer).
 
+import type { Category } from "./data";
+
 export const primaryNav = [
   { label: "Home", href: "/", icon: "home" },
   { label: "Pack", href: "/pack", icon: "package" },
@@ -8,12 +10,12 @@ export const primaryNav = [
 ] as const;
 
 export const categoryNav = [
-  { label: "Football", href: "/pack/football" },
-  { label: "Basketball", href: "/pack/basketball" },
-  { label: "Baseball", href: "/pack/baseball" },
-  { label: "Pokémon", href: "/pack/pokemon" },
-  { label: "Multi-Sport", href: "/pack/multi-sport" },
-] as const;
+  { label: "Football", href: "/pack/football", slug: "football" },
+  { label: "Basketball", href: "/pack/basketball", slug: "basketball" },
+  { label: "Baseball", href: "/pack/baseball", slug: "baseball" },
+  { label: "Pokémon", href: "/pack/pokemon", slug: "pokemon" },
+  { label: "Multi-Sport", href: "/pack/multi-sport", slug: "multi-sport" },
+] as const satisfies readonly { label: string; href: string; slug: Category }[];
 
 export const footerNav = [
   { label: "Home", href: "/" },

@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { LogIn, X } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Logo from "@/components/ui/Logo";
+import { sportIcon } from "@/components/ui/SportIcons";
 import { categoryNav, isActive, primaryNav } from "@/lib/nav";
 
 // Full-screen editorial menu for < lg.
@@ -69,17 +70,21 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
 
         <p className="eyebrow mb-3 mt-10">Categories</p>
         <div className="flex flex-wrap gap-2">
-          {categoryNav.map((c) => (
-            <Link
-              key={c.href}
-              href={c.href}
-              className={`h-10 rounded-sm border px-4 text-sm leading-10 ${
-                pathname === c.href ? "border-accent text-accent" : "border-line-strong text-fg-2"
-              }`}
-            >
-              {c.label}
-            </Link>
-          ))}
+          {categoryNav.map((c) => {
+            const I = sportIcon[c.slug];
+            return (
+              <Link
+                key={c.href}
+                href={c.href}
+                className={`flex h-10 items-center gap-2 rounded-sm border px-3.5 text-sm ${
+                  pathname === c.href ? "border-accent text-accent" : "border-line-strong text-fg-2"
+                }`}
+              >
+                <I aria-hidden className="h-4 w-4" />
+                {c.label}
+              </Link>
+            );
+          })}
         </div>
       </nav>
 

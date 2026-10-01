@@ -7,6 +7,8 @@ import Logo from "@/components/ui/Logo";
 import Button from "@/components/ui/Button";
 import Icon from "@/components/ui/Icon";
 import { LiveDot } from "@/components/ui/Tag";
+import { sportIcon } from "@/components/ui/SportIcons";
+import { useIconPlayer } from "@/components/ui/useIconPlayer";
 import { categoryNav, isActive, primaryNav } from "@/lib/nav";
 
 // Desktop side rail. Same information architecture as before — primary
@@ -14,6 +16,7 @@ import { categoryNav, isActive, primaryNav } from "@/lib/nav";
 // index rather than a rounded panel.
 export default function Rail() {
   const pathname = usePathname();
+  const { play, iconProps } = useIconPlayer();
 
   return (
     <aside className="fixed inset-y-0 left-0 z-40 hidden w-rail flex-col border-r border-line bg-ink-1 lg:flex">
@@ -56,15 +59,21 @@ export default function Rail() {
         <ul className="space-y-0.5">
           {categoryNav.map((item) => {
             const active = pathname === item.href;
+            const I = sportIcon[item.slug];
+            const { className, ...icon } = iconProps(item.slug);
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={`group flex h-9 items-center justify-between rounded-sm px-3 text-[14px] transition-colors duration-fast ${
-                    active ? "text-accent" : "text-fg-muted hover:text-fg"
+                  onPointerEnter={() => play(item.slug)}
+                  className={`group flex h-10 items-center justify-between rounded-sm px-3 text-[14px] font-medium transition-colors duration-fast ${
+                    active ? "bg-white/[0.04] text-accent" : "text-fg-muted hover:bg-white/[0.02] hover:text-fg"
                   }`}
                 >
-                  <span className="transition-transform duration-base ease-out group-hover:translate-x-1">{item.label}</span>
+                  <span className="flex items-center gap-3">
+                    <I aria-hidden strokeWidth={1.5} {...icon} className={`${className} h-[18px] w-[18px] shrink-0 ${active ? "text-accent" : ""}`} />
+                    <span className="transition-transform duration-base ease-out group-hover:translate-x-1">{item.label}</span>
+                  </span>
                   <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-all duration-base ease-out group-hover:opacity-100 group-hover:text-accent" />
                 </Link>
               </li>
