@@ -8,6 +8,7 @@ import Logo from "@/components/ui/Logo";
 import Button from "@/components/ui/Button";
 import { LiveDot } from "@/components/ui/Tag";
 import MobileMenu from "./MobileMenu";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 const crumbLabel = (pathname: string) => {
   const seg = pathname.split("/").filter((s) => s && s !== "product");
@@ -25,6 +26,7 @@ export default function TopBar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const auth = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -74,10 +76,10 @@ export default function TopBar() {
             >
               <Search className="h-4 w-4" />
             </Link>
-            <Button href="#" variant="ghost" size="sm" className="hidden sm:inline-flex">
+            <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => auth.open("login")}>
               <LogIn className="h-4 w-4" /> Log in
             </Button>
-            <Button href="#" variant="primary" size="sm">
+            <Button variant="primary" size="sm" onClick={() => auth.open("signup")}>
               <UserPlus className="h-4 w-4" /> Sign Up
             </Button>
             <button

@@ -8,10 +8,12 @@ import Button from "@/components/ui/Button";
 import Logo from "@/components/ui/Logo";
 import { sportIcon } from "@/components/ui/SportIcons";
 import { categoryNav, isActive, primaryNav } from "@/lib/nav";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 // Full-screen editorial menu for < lg.
 export default function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
+  const auth = useAuth();
 
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
@@ -89,7 +91,14 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
       </nav>
 
       <div className="frame grid shrink-0 grid-cols-2 gap-3 border-t border-line py-5">
-        <Button href="#" variant="secondary" size="lg">
+        <Button
+          variant="secondary"
+          size="lg"
+          onClick={() => {
+            onClose();
+            auth.open("login");
+          }}
+        >
           <LogIn className="h-4 w-4" /> Log in
         </Button>
         <Button href="#" variant="primary" size="lg" arrow>
