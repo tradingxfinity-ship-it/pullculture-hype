@@ -31,7 +31,6 @@ const config: Config = {
         accent: {
           DEFAULT: "rgb(var(--accent-rgb) / <alpha-value>)",
           ink: "var(--accent-ink)",
-          glow: "var(--accent-glow)",
         },
         line: {
           DEFAULT: "var(--line)",
@@ -50,12 +49,9 @@ const config: Config = {
       },
       fontSize: {
         // Editorial scale — deliberate jumps between metadata and display.
-        micro: ["0.6875rem", { lineHeight: "1rem", letterSpacing: "0.08em" }],
-        meta: ["0.75rem", { lineHeight: "1.1rem", letterSpacing: "0.06em" }],
         "display-sm": ["clamp(2rem, 4.2vw, 3.5rem)", { lineHeight: "0.95", letterSpacing: "-0.035em" }],
         "display-md": ["clamp(2.5rem, 6vw, 5.5rem)", { lineHeight: "0.9", letterSpacing: "-0.045em" }],
         "display-lg": ["clamp(3.5rem, 10vw, 10rem)", { lineHeight: "0.85", letterSpacing: "-0.055em" }],
-        "display-xl": ["clamp(4.5rem, 16vw, 17rem)", { lineHeight: "0.8", letterSpacing: "-0.06em" }],
       },
       borderRadius: {
         sm: "var(--r-sm)",
@@ -83,16 +79,11 @@ const config: Config = {
           "50%": { boxShadow: "0 0 0 6px rgba(117,251,181,0)" },
         },
         spin_y: { from: { transform: "rotateY(0deg)" }, to: { transform: "rotateY(360deg)" } },
-        float: {
-          "0%, 100%": { transform: "translate3d(0,0,0) rotate(var(--rot, 0deg))" },
-          "50%": { transform: "translate3d(0,-10px,0) rotate(var(--rot, 0deg))" },
-        },
       },
       animation: {
         marquee: "marquee var(--marquee-dur, 40s) linear infinite",
         "pulse-dot": "pulse_dot 2s var(--ease-in-out) infinite",
         "spin-y": "spin_y 9s linear infinite",
-        float: "float 7s var(--ease-in-out) infinite",
       },
     },
   },

@@ -30,8 +30,6 @@
   /* Signature accent */
   --accent: #75fbb5;
   --accent-ink: #03140b;
-  --accent-glow: rgba(117, 251, 181, 0.15);
-  --accent-soft: rgba(117, 251, 181, 0.08);
 
   /* Lines */
   --line: rgba(255, 255, 255, 0.1);
