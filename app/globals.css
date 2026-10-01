@@ -677,7 +677,8 @@
   height: 18px;
   color: #fff;
   opacity: 0;
-  transform: translate(-50%, -50%) rotate(-90deg);
+  /* blades lead in the direction of the cut (left → right) */
+  transform: translate(-50%, -50%);
   filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7));
   transition: left 380ms var(--ease-in-out), opacity 150ms ease;
 }
@@ -693,7 +694,7 @@
 }
 @keyframes rip-snip {
   50% {
-    transform: translate(-50%, -50%) rotate(-90deg) scaleX(0.75);
+    transform: translate(-50%, -50%) scaleY(0.7);
   }
 }
 @keyframes rip-scissors-out {
