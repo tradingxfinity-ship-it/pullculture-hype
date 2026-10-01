@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
@@ -5,14 +7,46 @@ import Tag from "@/components/ui/Tag";
 import { usd, type Listing } from "@/lib/data";
 
 // Marketplace listing: slabbed card on a lit stage, metadata below.
+// Hover lifts the slab, tilts it toward the pointer and sweeps light
+// across the case (see "Slab inspect hover" in globals.css).
 export default function ListingCard({ item, className = "" }: { item: Listing; className?: string }) {
+  // Pointer position → tilt angles and glare position, as CSS variables.
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return;
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    el.style.setProperty("--ry", `${(x - 0.5) * 16}deg`);
+    el.style.setProperty("--rx", `${(0.5 - y) * 12}deg`);
+    el.style.setProperty("--gx", `${x * 100}%`);
+    el.style.setProperty("--gy", `${y * 100}%`);
+  };
+  const onLeave = (e: React.PointerEvent<HTMLDivElement>) => {
+    const s = e.currentTarget.style;
+    s.removeProperty("--rx");
+    s.removeProperty("--ry");
+  };
+
+  const caseMask = { maskImage: `url(${item.image})`, WebkitMaskImage: `url(${item.image})` } as React.CSSProperties;
+
   return (
     <Link href={`/marketplace/${encodeURIComponent(item.name)}`} className={`group flex flex-col ${className}`}>
-      <div className="media relative aspect-[4/5] rounded-md border border-line bg-gradient-to-b from-ink-4 to-ink-2 transition-colors duration-base group-hover:border-line-strong">
-        <div className="absolute inset-x-8 bottom-4 h-8 rounded-[50%] bg-black/80 blur-xl" aria-hidden />
+      <div
+        onPointerMove={onMove}
+        onPointerLeave={onLeave}
+        className="slab-stage media relative aspect-[4/5] rounded-md border border-line bg-gradient-to-b from-ink-4 to-ink-2 transition-colors duration-base group-hover:border-line-strong"
+      >
+        <div className="slab-floor" aria-hidden />
         <div className="glow absolute left-1/2 top-1/2 h-2/3 w-2/3 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-slow group-hover:opacity-100" aria-hidden />
-        <Image src={item.image} alt={`${item.name} ${item.set}`} fill sizes="(min-width:1024px) 22vw, 45vw" className="object-contain p-[12%]" />
-        <div className="absolute inset-x-3 top-3 flex items-center justify-between">
+
+        <div className="slab">
+          <Image src={item.image} alt={`${item.name} ${item.set}`} fill sizes="(min-width:1024px) 22vw, 45vw" className="object-contain" />
+          <div className="slab-sweep" style={caseMask} aria-hidden />
+          <div className="slab-glare" style={caseMask} aria-hidden />
+        </div>
+
+        <div className="absolute inset-x-3 top-3 z-[2] flex items-center justify-between">
           <Tag tone={item.type === "auction" ? "accent" : "default"} className="bg-black/50">
             {item.type === "auction" ? "Auction" : "Buy now"}
           </Tag>
