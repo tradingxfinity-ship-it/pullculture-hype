@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import PackCard from "@/components/cards/PackCard";
@@ -28,7 +29,12 @@ export default function PacksView({ active }: { active?: Category }) {
     <>
       <header className="relative overflow-hidden border-b border-line">
         <div className="glow absolute -right-20 -top-40 h-[360px] w-[620px]" aria-hidden />
-        <div className="frame relative pb-8 pt-8 md:pb-10 md:pt-10">
+        {/* Pack trio rising out of the tab bar — bottom half clipped by the header edge */}
+        <div className="pointer-events-none absolute bottom-0 right-[var(--gutter)] hidden w-[min(34vw,500px)] translate-y-[52%] md:block" aria-hidden>
+          <div className="glow absolute inset-[10%]" />
+          <Image src="/assets/cards/tier-packs.webp" alt="" width={1495} height={912} priority sizes="34vw" className="relative h-auto w-full drop-shadow-[0_-10px_40px_rgba(0,0,0,0.6)]" />
+        </div>
+        <div className="frame relative z-10 pb-8 pt-8 md:pb-10 md:pt-10">
           <Reveal className="is-in">
             <div className="mb-4 flex items-center gap-3">
               <span className="h-px w-8 bg-accent/60" aria-hidden />
@@ -46,7 +52,7 @@ export default function PacksView({ active }: { active?: Category }) {
               )}
             </h1>
 
-            <div className="mt-6 flex flex-col gap-5 md:mt-8 lg:flex-row lg:items-center lg:justify-between">
+            <div className="mt-6 md:mt-8">
               <ul className="flex gap-2 sm:gap-3">
                 {(["Silver", "Gold", "Platinum"] as const).map((t) => (
                   <li key={t} className={`flex-1 rounded-md px-4 py-3 sm:min-w-[132px] sm:flex-none sm:px-5 ${tierBox[t]}`}>
@@ -55,9 +61,6 @@ export default function PacksView({ active }: { active?: Category }) {
                   </li>
                 ))}
               </ul>
-              <p className="max-w-md text-[15px] leading-relaxed text-fg-muted lg:text-right">
-                {active ? activeCat!.blurb : "Three tiers across five categories. Every pack shows its odds up front, and every hit can be sold back instantly or shipped to your door."}
-              </p>
             </div>
           </Reveal>
         </div>
