@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import PackCard from "@/components/cards/PackCard";
-import PageHeader from "@/components/ui/PageHeader";
 import Reveal from "@/components/ui/Reveal";
 import Tabs from "@/components/ui/Tabs";
 import { categories, getPack, packs, packsIn, tierPrice, trendingPacks, usd, type Category } from "@/lib/data";
@@ -10,6 +9,13 @@ const tabs = [
   { label: "All Packs", href: "/pack", count: packs.length },
   ...categories.map((c) => ({ label: c.label, href: `/pack/${c.slug}`, count: packsIn(c.slug).length })),
 ];
+
+// Tier price chips, coloured like the packs themselves.
+const tierBox = {
+  Silver: "bg-gradient-to-br from-[#f2f4f6] to-[#aeb4bc] text-black",
+  Gold: "bg-gradient-to-br from-[#f7df8f] to-[#c7972b] text-black",
+  Platinum: "bg-gradient-to-br from-[#3a3e45] to-[#0d0e10] text-white ring-1 ring-inset ring-white/15",
+} as const;
 
 // Shared by /pack and /pack/[category]. Same order as before: category
 // tabs, Trending Packs, then one block per category.
@@ -20,21 +26,42 @@ export default function PacksView({ active }: { active?: Category }) {
 
   return (
     <>
-      <PageHeader
-        eyebrow={active ? "Category" : "The Pack Room"}
-        title={active ? [activeCat!.label, <span key="p" className="text-fg-dim">Packs</span>] : ["Pick a pack.", <>Rip it <em key="e" className="font-serif font-normal italic tracking-[-0.02em] text-accent">open.</em></>]}
-        intro={active ? activeCat!.blurb : "Three tiers across five categories. Every pack shows its odds up front, and every hit can be sold back instantly or shipped to your door."}
-        meta={
-          <div className="flex gap-8 font-mono text-sm">
-            {(["Silver", "Gold", "Platinum"] as const).map((t) => (
-              <div key={t}>
-                <p className="eyebrow !text-[10px]">{t}</p>
-                <p className="mt-1 text-fg">{usd(tierPrice[t])}</p>
-              </div>
-            ))}
-          </div>
-        }
-      />
+      <header className="relative overflow-hidden border-b border-line">
+        <div className="glow absolute -right-20 -top-40 h-[360px] w-[620px]" aria-hidden />
+        <div className="frame relative pb-8 pt-8 md:pb-10 md:pt-10">
+          <Reveal className="is-in">
+            <div className="mb-4 flex items-center gap-3">
+              <span className="h-px w-8 bg-accent/60" aria-hidden />
+              <span className="eyebrow text-accent">{active ? "Category" : "The Pack Room"}</span>
+            </div>
+            <h1 className="text-[clamp(2.25rem,5.2vw,5rem)] font-bold leading-[0.95] tracking-[-0.05em] text-fg sm:whitespace-nowrap">
+              {active ? (
+                <>
+                  {activeCat!.label} <span className="text-fg-dim">Packs</span>
+                </>
+              ) : (
+                <>
+                  Pick a pack. Rip it <em className="font-serif font-normal italic tracking-[-0.02em] text-accent">open.</em>
+                </>
+              )}
+            </h1>
+
+            <div className="mt-6 flex flex-col gap-5 md:mt-8 lg:flex-row lg:items-center lg:justify-between">
+              <ul className="flex gap-2 sm:gap-3">
+                {(["Silver", "Gold", "Platinum"] as const).map((t) => (
+                  <li key={t} className={`flex-1 rounded-md px-4 py-3 sm:min-w-[132px] sm:flex-none sm:px-5 ${tierBox[t]}`}>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.14em] opacity-70">{t}</p>
+                    <p className="mt-0.5 font-mono text-xl font-semibold tabular-nums sm:text-2xl">{usd(tierPrice[t])}</p>
+                  </li>
+                ))}
+              </ul>
+              <p className="max-w-md text-[15px] leading-relaxed text-fg-muted lg:text-right">
+                {active ? activeCat!.blurb : "Three tiers across five categories. Every pack shows its odds up front, and every hit can be sold back instantly or shipped to your door."}
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </header>
 
       <div className="sticky top-[var(--topbar-h)] z-20 border-b border-line bg-black/80 backdrop-blur-xl">
         <div className="frame">
@@ -43,14 +70,12 @@ export default function PacksView({ active }: { active?: Category }) {
       </div>
 
       {!active && (
-        <section className="frame py-20 md:py-28">
-          <Reveal className="mb-10 flex items-end justify-between gap-6 md:mb-14">
-            <div>
-              <p className="eyebrow mb-4 text-accent">Trending now</p>
-              <h2 className="text-display-sm font-bold">Trending Packs</h2>
-            </div>
+        <section className="frame pb-20 pt-8 md:pb-28 md:pt-10">
+          <div className="mb-5 flex items-center gap-4 md:mb-6">
+            <h2 className="text-xl font-bold tracking-[-0.03em] text-fg md:text-2xl">Trending Packs</h2>
+            <span className="h-px flex-1 bg-line" aria-hidden />
             <span className="eyebrow hidden md:block">Most ripped · Last 24h</span>
-          </Reveal>
+          </div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:gap-x-6 lg:grid-cols-4">
             {trending.map((p, i) => (
               <Reveal key={p.name} delay={i * 80}>
