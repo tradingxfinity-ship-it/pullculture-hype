@@ -43,7 +43,7 @@ export default function PageHeader({
           </div>
           {(intro || meta) && (
             <div className="col-span-4 md:col-span-8 lg:col-span-4 lg:pb-2">
-              {meta && <div className="mb-5">{meta}</div>}
+              {meta && <div className={intro ? "mb-5" : undefined}>{meta}</div>}
               {intro && <p className="max-w-md text-[15px] leading-relaxed text-fg-muted">{intro}</p>}
             </div>
           )}
