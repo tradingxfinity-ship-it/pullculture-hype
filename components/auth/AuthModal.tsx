@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useRef, useState, type InputHTMLAttributes, type ReactNode } from "react";
-import { ChevronDown, Eye, EyeOff, Info, X } from "lucide-react";
+import { useEffect, useId, useRef, useState } from "react";
+import { ChevronDown, Info, X } from "lucide-react";
+import { Check, Field, Input, PasswordInput, inlineLink } from "@/components/ui/Form";
 import Button from "@/components/ui/Button";
 import Logo from "@/components/ui/Logo";
 
@@ -27,64 +28,6 @@ const AppleLogo = () => (
   </svg>
 );
 
-function Field({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <label className="block">
-      <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.12em] text-fg-muted">{label}</span>
-      {children}
-    </label>
-  );
-}
-
-const inputCls =
-  "h-12 w-full rounded-sm border border-line-strong bg-ink-2 px-4 text-[15px] text-fg outline-none transition-colors placeholder:text-fg-dim hover:border-white/25 focus:border-accent";
-
-function Input(props: InputHTMLAttributes<HTMLInputElement>) {
-  return <input className={inputCls} {...props} />;
-}
-
-function PasswordInput(props: InputHTMLAttributes<HTMLInputElement>) {
-  const [show, setShow] = useState(false);
-  return (
-    <div className="relative">
-      <input className={`${inputCls} pr-12`} type={show ? "text" : "password"} {...props} />
-      <button
-        type="button"
-        onClick={() => setShow((s) => !s)}
-        aria-label={show ? "Hide password" : "Show password"}
-        className="absolute inset-y-0 right-0 grid w-12 place-items-center text-fg-dim transition-colors hover:text-fg"
-      >
-        {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-      </button>
-    </div>
-  );
-}
-
-function Check({ children, required, name }: { children: ReactNode; required?: boolean; name: string }) {
-  return (
-    <label className="relative flex cursor-pointer items-start gap-3 text-sm text-fg-muted">
-      <input
-        type="checkbox"
-        name={name}
-        required={required}
-        className="peer mt-0.5 h-[18px] w-[18px] shrink-0 cursor-pointer appearance-none rounded-[5px] border border-line-strong bg-ink-2 transition-colors checked:border-accent checked:bg-accent focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-accent"
-      />
-      <svg
-        viewBox="0 0 16 16"
-        className="pointer-events-none absolute left-px top-[3px] h-4 w-4 text-accent-ink opacity-0 peer-checked:opacity-100"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        aria-hidden
-      >
-        <path d="m4 8.5 2.5 2.5L12 5.5" />
-      </svg>
-      <span>{children}</span>
-    </label>
-  );
-}
-
-const inlineLink = "font-medium text-accent underline-offset-4 hover:underline";
 
 export default function AuthModal({ mode, onMode, onClose }: { mode: AuthMode | null; onMode: (m: AuthMode) => void; onClose: () => void }) {
   const open = mode !== null;

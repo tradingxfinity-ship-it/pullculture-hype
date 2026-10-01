@@ -101,7 +101,7 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
         >
           <LogIn className="h-4 w-4" /> Log in
         </Button>
-        <Button href="#" variant="primary" size="lg" arrow>
+        <Button href="/submit" variant="primary" size="lg" arrow>
           Submit Cards
         </Button>
       </div>

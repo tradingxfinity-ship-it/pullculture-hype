@@ -98,7 +98,7 @@ export default function Rail() {
         <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-fg-dim">
           <LiveDot /> Vault open · Drops Fri
         </div>
-        <Button href="#" variant="primary" size="md" full arrow magnetic>
+        <Button href="/submit" variant="primary" size="md" full arrow magnetic>
           Submit Cards
         </Button>
       </div>
