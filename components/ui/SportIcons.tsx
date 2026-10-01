@@ -2,8 +2,14 @@ import type { SVGProps } from "react";
 import type { Category } from "@/lib/data";
 
 // Line icons for each category, drawn on a 24px grid to match Lucide.
+// Parts that animate on their own carry classes (see "Category icon
+// motion" in globals.css).
 type P = SVGProps<SVGSVGElement>;
 const base = { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+
+// Four-point sparkle centred on (x, y).
+const spark = (x: number, y: number, s: number) =>
+  `M${x} ${y - s}Q${x} ${y} ${x + s} ${y}Q${x} ${y} ${x} ${y + s}Q${x} ${y} ${x - s} ${y}Q${x} ${y} ${x} ${y - s}Z`;
 
 export const FootballIcon = (p: P) => (
   <svg {...base} {...p}>
@@ -33,7 +39,7 @@ export const PokeballIcon = (p: P) => (
   <svg {...base} {...p}>
     <circle cx="12" cy="12" r="9" />
     <path d="M3 12h6M15 12h6" />
-    <circle cx="12" cy="12" r="3" />
+    <circle className="pb-btn" cx="12" cy="12" r="3" />
   </svg>
 );
 
@@ -42,6 +48,10 @@ export const TrophyIcon = (p: P) => (
     <path d="M8 4h8v5a4 4 0 0 1-8 0V4Z" />
     <path d="M8 6H5.5a1.5 1.5 0 0 0 0 3c.9 0 1.7 0 2.5.5M16 6h2.5a1.5 1.5 0 0 1 0 3c-.9 0-1.7 0-2.5.5" />
     <path d="M12 13v3M8.5 20h7M9.5 20c0-2 1-4 2.5-4s2.5 2 2.5 4" />
+    <path className="tr-spark" d={spark(3, 2.5, 1.8)} fill="currentColor" stroke="none" />
+    <path className="tr-spark" d={spark(21.5, 3.5, 1.4)} fill="currentColor" stroke="none" style={{ animationDelay: "160ms" }} />
+    <path className="tr-spark" d={spark(20.5, 14, 1.1)} fill="currentColor" stroke="none" style={{ animationDelay: "320ms" }} />
+    <path className="tr-spark" d={spark(3.5, 13.5, 1)} fill="currentColor" stroke="none" style={{ animationDelay: "240ms" }} />
   </svg>
 );
 
