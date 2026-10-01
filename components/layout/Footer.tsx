@@ -36,10 +36,10 @@ export default function Footer() {
       <div className="glow absolute -top-40 left-1/4 h-[480px] w-[720px] opacity-70" aria-hidden />
 
       {/* Get Updated — copy + form left, socials right */}
-      <div className="frame relative pb-20 pt-section">
-        <div className="grid-12 items-center gap-y-12">
+      <div className="frame relative py-14 md:py-16">
+        <div className="grid-12 items-center gap-y-10">
           <Reveal className="col-span-4 md:col-span-8 lg:col-span-6">
-            <div className="mb-8 flex items-center gap-3">
+            <div className="mb-5 flex items-center gap-3">
               <span className="font-mono text-[11px] tracking-[0.12em] text-accent">∞</span>
               <span className="h-px w-8 bg-accent/60" aria-hidden />
               <span className="eyebrow">Get Updated</span>
@@ -53,14 +53,14 @@ export default function Footer() {
               ]}
               className="text-[clamp(2.5rem,4.6vw,4.75rem)] font-bold leading-[0.92] tracking-[-0.045em]"
             />
-            <p className="mb-6 mt-8 max-w-md text-[15px] leading-relaxed text-fg-muted">
+            <p className="mb-4 mt-5 max-w-md text-[15px] leading-relaxed text-fg-muted">
               Sign-Up to get notified and be the first in line for rare pack drops, new marketplace cards, and members-only offers.
             </p>
             <Newsletter />
           </Reveal>
 
           <Reveal delay={120} className="col-span-4 md:col-span-8 lg:col-span-5 lg:col-start-8">
-            <p className="eyebrow mb-4">Follow Our Socials</p>
+            <p className="eyebrow mb-3">Follow Our Socials</p>
             <ul className="grid grid-cols-2 gap-3 md:gap-4">
               {socials.map((s) => {
                 const I = socialIcon[s.label as keyof typeof socialIcon];
@@ -69,12 +69,14 @@ export default function Footer() {
                     <a
                       href={s.href}
                       aria-label={s.label}
-                      className="group relative flex aspect-square flex-col justify-between overflow-hidden rounded-lg bg-accent p-5 text-accent-ink transition-[transform,box-shadow] duration-base ease-out hover:-translate-y-1 hover:shadow-[0_18px_50px_-12px_rgba(117,251,181,0.55)] md:p-6"
+                      className="group relative flex h-28 flex-col justify-between overflow-hidden rounded-lg bg-accent p-4 text-accent-ink md:h-36 transition-[transform,box-shadow] duration-base ease-out hover:-translate-y-1 hover:shadow-[0_18px_50px_-12px_rgba(117,251,181,0.55)] md:p-5"
                     >
                       <span className="absolute inset-0 origin-bottom scale-y-0 bg-white/25 transition-transform duration-slow ease-out group-hover:scale-y-100" aria-hidden />
-                      <ArrowUpRight className="arrow-nudge relative h-5 w-5 self-end md:h-6 md:w-6" />
-                      <I className="relative h-12 w-12 transition-transform duration-slow ease-out group-hover:-rotate-6 group-hover:scale-110 md:h-16 md:w-16" />
-                      <span className="relative text-lg font-bold tracking-[-0.03em] md:text-2xl">{s.label}</span>
+                      <span className="relative flex items-start justify-between">
+                        <I className="h-8 w-8 transition-transform duration-slow ease-out group-hover:-rotate-6 group-hover:scale-110 md:h-10 md:w-10" />
+                        <ArrowUpRight className="arrow-nudge h-5 w-5" />
+                      </span>
+                      <span className="relative text-lg font-bold tracking-[-0.03em] md:text-xl">{s.label}</span>
                     </a>
                   </li>
                 );
