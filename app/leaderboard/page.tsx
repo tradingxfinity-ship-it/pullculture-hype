@@ -8,9 +8,13 @@ export default function LeaderboardPage() {
   return (
     <>
       <PageHeader
+        compact
         eyebrow="Leaderboard — Monthly"
-        title={["Rank up.", <>Win <em key="e" className="font-serif font-normal italic tracking-[-0.02em] text-accent">grails.</em></>]}
-        intro="Bigger packs mean bigger points. The top three collectors each month take home a graded grail."
+        title={[
+          <>
+            Rank up. Win <em className="font-serif font-normal italic tracking-[-0.02em] text-accent">grails.</em>
+          </>,
+        ]}
       />
       <Leaderboard />
     </>
