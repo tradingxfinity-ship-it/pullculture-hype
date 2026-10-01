@@ -32,7 +32,7 @@ export default function MarketBrowser() {
     <>
       <div className="sticky top-[var(--topbar-h)] z-20 border-b border-line bg-black/80 backdrop-blur-xl">
         <div className="frame flex flex-col gap-3 py-3 lg:flex-row lg:items-center">
-          <label className="group relative flex h-11 flex-1 items-center rounded-sm border border-line-strong bg-ink-2 px-3.5 transition-colors focus-within:border-accent">
+          <label className="group relative flex h-11 shrink-0 items-center rounded-sm lg:flex-1 border border-line-strong bg-ink-2 px-3.5 transition-colors focus-within:border-accent">
             <Search className="h-4 w-4 text-fg-dim group-focus-within:text-accent" />
             <span className="sr-only">Search cards</span>
             <input
@@ -107,8 +107,8 @@ export default function MarketBrowser() {
         </div>
       </div>
 
-      <section className="frame py-12 md:py-16">
-        <div className="mb-8 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.12em] text-fg-dim">
+      <section className="frame pb-16 pt-8 md:pb-20 md:pt-10">
+        <div className="mb-6 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.12em] text-fg-dim">
           <span>
             <span className="text-fg">{String(results.length).padStart(2, "0")}</span> results
           </span>
