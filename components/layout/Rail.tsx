@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowUpRight, CircleHelp } from "lucide-react";
+import Image from "next/image";
+import { ArrowUpRight, ChevronRight, CircleHelp } from "lucide-react";
 import Logo from "@/components/ui/Logo";
 import Button from "@/components/ui/Button";
 import Icon from "@/components/ui/Icon";
@@ -10,6 +11,8 @@ import { LiveDot } from "@/components/ui/Tag";
 import { sportIcon } from "@/components/ui/SportIcons";
 import { useIconPlayer } from "@/components/ui/useIconPlayer";
 import { categoryNav, isActive, primaryNav } from "@/lib/nav";
+import { useAccount } from "@/components/account/AccountProvider";
+import { usd } from "@/lib/data";
 
 // Desktop side rail. Same information architecture as before — primary
 // nav, sport categories, How it works, Submit Cards — set as an editorial
@@ -17,6 +20,10 @@ import { categoryNav, isActive, primaryNav } from "@/lib/nav";
 export default function Rail() {
   const pathname = usePathname();
   const { play, iconProps } = useIconPlayer();
+  const {
+    state: { user, balance },
+  } = useAccount();
+  const inAccount = pathname.startsWith("/account");
 
   return (
     <aside className="fixed inset-y-0 left-0 z-40 hidden w-rail flex-col border-r border-line bg-ink-1 lg:flex">
@@ -95,6 +102,24 @@ export default function Rail() {
       </nav>
 
       <div className="space-y-4 border-t border-line p-5">
+        {/* Profile (demo account) */}
+        <Link
+          href="/account"
+          aria-current={inAccount ? "page" : undefined}
+          className={`group flex items-center gap-3 rounded-md border p-2.5 transition-colors ${
+            inAccount ? "border-accent/50 bg-accent/[0.06]" : "border-line hover:border-line-strong hover:bg-white/[0.02]"
+          }`}
+        >
+          <span className="relative shrink-0">
+            <Image src={user.avatar} alt="" width={40} height={40} className="h-10 w-10 rounded-[6px] object-cover" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-ink-1 bg-accent" aria-hidden />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className={`block truncate text-sm font-semibold ${inAccount ? "text-accent" : "text-fg"}`}>{user.name}</span>
+            <span className="block truncate font-mono text-[12px] tabular-nums text-accent">{usd(balance, true)}</span>
+          </span>
+          <ChevronRight className="h-4 w-4 shrink-0 text-fg-dim transition-transform duration-base group-hover:translate-x-0.5 group-hover:text-accent" />
+        </Link>
         <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-fg-dim">
           <LiveDot /> Vault open · Drops Fri
         </div>
