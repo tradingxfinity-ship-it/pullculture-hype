@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Archive, ArrowDownLeft, Package, Sparkles, Store, Tag as TagIcon, Trophy, Upload, Wallet } from "lucide-react";
+import { ArrowUpRight, Archive, ArrowDownLeft, Package, Scissors, Sparkles, Store, Tag as TagIcon, Trophy, Upload, Wallet, type LucideIcon } from "lucide-react";
 import { useAccount, useAccountStats } from "./AccountProvider";
 import { PanelTitle, StatusChip } from "./AccountShell";
 import { OrderTimeline } from "./OrdersView";
@@ -10,11 +10,28 @@ import { fmtDate } from "@/lib/account";
 import { num, usd } from "@/lib/data";
 
 const quick = [
-  { href: "/pack", label: "Rip a pack", body: "15 packs · from $25", icon: Sparkles },
-  { href: "/account/vault", label: "Ship cards", body: "Send hits to your door", icon: Package },
-  { href: "/marketplace", label: "Marketplace", body: "Bid, buy and trade", icon: Store },
-  { href: "/submit", label: "Submit cards", body: "Sell or grade yours", icon: Upload },
+  { href: "/pack", label: "Rip a pack", body: "15 packs · from $25", icon: Scissors, art: "rip" },
+  { href: "/account/vault", label: "Ship cards", body: "Send hits to your door", icon: Package, art: "ship" },
+  { href: "/marketplace", label: "Marketplace", body: "Bid, buy and trade", icon: Store, art: "market" },
+  { href: "/submit", label: "Submit cards", body: "Sell or grade yours", icon: Upload, art: "submit" },
 ];
+
+// Big faded icon behind a dashboard tile; animates while the tile is hovered
+// (see "Dashboard tile hover" in globals.css).
+function TileArt({ icon: I, art }: { icon: LucideIcon; art: string }) {
+  return (
+    <span className={`tile-art art-${art}`} aria-hidden>
+      <I strokeWidth={1.25} />
+      {art === "wallet" && (
+        <>
+          <span className="coin" />
+          <span className="coin" />
+          <span className="coin" />
+        </>
+      )}
+    </span>
+  );
+}
 
 export default function DashboardView() {
   const { state } = useAccount();
@@ -24,10 +41,10 @@ export default function DashboardView() {
   const activeOrder = state.orders.find((o) => o.status !== "delivered");
 
   const tiles = [
-    { label: "Vault value", value: usd(stats.vaultValue), sub: `${stats.vaultCount} cards · ${stats.listedCount} listed`, href: "/account/vault", icon: Archive, accent: true },
-    { label: "Balance", value: usd(state.balance, true), sub: "Add funds", href: "/account/wallet", icon: Wallet },
-    { label: "Points", value: num(state.points), sub: `+${num(state.pointsToday)} today`, href: "/leaderboard", icon: Sparkles },
-    { label: "Monthly rank", value: `#${num(state.rank)}`, sub: "View leaderboard", href: "/leaderboard", icon: Trophy },
+    { label: "Vault value", value: usd(stats.vaultValue), sub: `${stats.vaultCount} cards · ${stats.listedCount} listed`, href: "/account/vault", icon: Archive, art: "vault", accent: true },
+    { label: "Balance", value: usd(state.balance, true), sub: "Add funds", href: "/account/wallet", icon: Wallet, art: "wallet" },
+    { label: "Points", value: num(state.points), sub: `+${num(state.pointsToday)} today`, href: "/leaderboard", icon: Sparkles, art: "points" },
+    { label: "Monthly rank", value: `#${num(state.rank)}`, sub: "View leaderboard", href: "/leaderboard", icon: Trophy, art: "rank" },
   ];
 
   return (
@@ -44,16 +61,23 @@ export default function DashboardView() {
             <Link
               key={t.label}
               href={t.href}
-              className={`group relative overflow-hidden rounded-md border p-5 transition-colors ${t.accent ? "border-accent/40 bg-accent/[0.05] hover:border-accent" : "border-line bg-ink-1 hover:border-line-strong"}`}
+              className={`dash-tile group relative isolate overflow-hidden rounded-md border p-5 ${t.accent ? "border-accent/40 bg-accent/[0.05]" : "border-line bg-ink-1"}`}
             >
-              <div className="flex items-center justify-between">
-                <span className="eyebrow !text-[10px]">{t.label}</span>
-                <I className={`h-4 w-4 ${t.accent ? "text-accent" : "text-fg-dim"}`} />
+              <TileArt icon={I} art={t.art} />
+              <div className="relative flex items-center gap-2">
+                <I className={`h-4 w-4 shrink-0 transition-colors group-hover:text-accent-ink ${t.accent ? "text-accent" : "text-fg-dim"}`} />
+                <span className="eyebrow !text-[10px] transition-colors group-hover:!text-black/70">{t.label}</span>
               </div>
-              <p className={`mt-4 font-mono text-[clamp(1.4rem,2.4vw,2rem)] tabular-nums leading-none ${t.accent ? "text-accent" : "text-fg"}`}>{t.value}</p>
-              <p className="mt-2 flex items-center justify-between text-xs text-fg-muted">
+              <p
+                className={`relative mt-4 font-mono text-[clamp(1.4rem,2.4vw,2rem)] tabular-nums leading-none transition-colors group-hover:text-accent-ink ${
+                  t.accent ? "text-accent" : "text-fg"
+                }`}
+              >
+                {t.value}
+              </p>
+              <p className="relative mt-2 flex items-center justify-between text-xs text-fg-muted transition-colors group-hover:text-black/70">
                 {t.sub}
-                <ArrowUpRight className="arrow-nudge h-3.5 w-3.5 text-fg-dim group-hover:text-accent" />
+                <ArrowUpRight className="arrow-nudge h-3.5 w-3.5 text-fg-dim group-hover:text-accent-ink" />
               </p>
             </Link>
           );
@@ -65,13 +89,14 @@ export default function DashboardView() {
         {quick.map((q) => {
           const I = q.icon;
           return (
-            <Link key={q.href} href={q.href} className="group flex items-center gap-4 rounded-md border border-line p-4 transition-all hover:-translate-y-0.5 hover:border-accent">
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-sm bg-white/5 text-fg transition-colors group-hover:bg-accent group-hover:text-accent-ink">
+            <Link key={q.href} href={q.href} className="dash-tile group relative isolate flex items-center gap-4 overflow-hidden rounded-md border border-line p-4">
+              <TileArt icon={I} art={q.art} />
+              <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-sm bg-white/5 text-fg transition-colors group-hover:bg-black/10 group-hover:text-accent-ink">
                 <I className="h-5 w-5" strokeWidth={1.75} />
               </span>
-              <span className="min-w-0">
-                <span className="block truncate font-semibold text-fg">{q.label}</span>
-                <span className="block truncate text-xs text-fg-dim">{q.body}</span>
+              <span className="relative min-w-0">
+                <span className="block truncate font-semibold text-fg transition-colors group-hover:text-accent-ink">{q.label}</span>
+                <span className="block truncate text-xs text-fg-dim transition-colors group-hover:text-black/65">{q.body}</span>
               </span>
             </Link>
           );

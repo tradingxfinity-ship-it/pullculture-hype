@@ -960,6 +960,191 @@
   100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d, 180px)) scale(0.3); }
 }
 
+/* ------------------------------------------------------------------
+   Dashboard tile hover (components/account/DashboardView.tsx)
+   Tile floods mint; a big faded icon fades in behind the content and
+   plays its own looping move while hovered.
+   ------------------------------------------------------------------ */
+.dash-tile {
+  transition: background-color 450ms var(--ease-out), border-color 450ms var(--ease-out), transform 450ms var(--ease-out), box-shadow 450ms var(--ease-out);
+}
+.dash-tile:hover,
+.dash-tile:focus-visible {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 18px 50px -14px rgba(117, 251, 181, 0.55);
+}
+.tile-art {
+  position: absolute;
+  right: -8%;
+  bottom: -22%;
+  z-index: -1;
+  height: 135%;
+  aspect-ratio: 1;
+  color: var(--accent-ink);
+  opacity: 0;
+  transform: scale(0.6) rotate(-14deg);
+  transition: opacity 450ms var(--ease-out), transform 800ms var(--ease-out);
+  pointer-events: none;
+}
+.tile-art > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.dash-tile:hover .tile-art,
+.dash-tile:focus-visible .tile-art {
+  opacity: 0.17;
+  transform: none;
+}
+
+/* Vault — box bobs while the lid pops open */
+.dash-tile:hover .art-vault > svg {
+  animation: art-bob 1.6s var(--ease-in-out) infinite;
+}
+.art-vault > svg > :first-child {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+}
+.dash-tile:hover .art-vault > svg > :first-child {
+  animation: art-lid 1.6s var(--ease-in-out) infinite;
+}
+@keyframes art-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5%); }
+}
+@keyframes art-lid {
+  0%, 30%, 100% { transform: translateY(0) rotate(0deg); }
+  45% { transform: translateY(-22%) rotate(-24deg); }
+  70% { transform: translateY(-12%) rotate(-14deg); }
+}
+
+/* Balance — coins drop into the wallet, which squashes on each catch */
+.dash-tile:hover .art-wallet > svg {
+  transform-origin: 50% 100%;
+  animation: art-catch 1.2s var(--ease-in-out) infinite;
+}
+.art-wallet .coin {
+  position: absolute;
+  left: 46%;
+  top: 6%;
+  width: 16%;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: currentColor;
+  box-shadow: inset 0 0 0 0.35em rgba(117, 251, 181, 0.6); /* coin rim */
+  opacity: 0;
+}
+.art-wallet .coin:nth-of-type(2) { left: 30%; }
+.art-wallet .coin:nth-of-type(3) { left: 60%; }
+.dash-tile:hover .art-wallet .coin {
+  animation: art-coin 1.2s cubic-bezier(0.55, 0, 0.9, 0.4) infinite;
+}
+.dash-tile:hover .art-wallet .coin:nth-of-type(2) { animation-delay: 400ms; }
+.dash-tile:hover .art-wallet .coin:nth-of-type(3) { animation-delay: 800ms; }
+@keyframes art-coin {
+  0% { opacity: 0; transform: translateY(-60%) rotate(0deg); }
+  15% { opacity: 1; }
+  70% { opacity: 1; }
+  85%, 100% { opacity: 0; transform: translateY(170%) rotate(220deg); }
+}
+@keyframes art-catch {
+  0%, 60%, 100% { transform: scale(1, 1); }
+  72% { transform: scale(1.06, 0.92); }
+  84% { transform: scale(0.98, 1.03); }
+}
+
+/* Points — the star spins and pulses while the small stars twinkle */
+.dash-tile:hover .art-points > svg {
+  animation: art-spin 4s linear infinite;
+}
+.dash-tile:hover .art-points > svg > :first-child {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: art-pulse 1s var(--ease-in-out) infinite;
+}
+.dash-tile:hover .art-points > svg > :not(:first-child) {
+  animation: art-twinkle 0.9s steps(2, jump-none) infinite;
+}
+.dash-tile:hover .art-points > svg > :nth-child(4),
+.dash-tile:hover .art-points > svg > :nth-child(5) {
+  animation-delay: 450ms;
+}
+@keyframes art-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes art-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+@keyframes art-twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+
+/* Rank — the trophy is hoisted and wiggled */
+.dash-tile:hover .art-rank > svg {
+  transform-origin: 50% 100%;
+  animation: art-hoist 1.5s var(--ease-in-out) infinite;
+}
+@keyframes art-hoist {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  25% { transform: translateY(-12%) rotate(-8deg) scale(1.05); }
+  40% { transform: translateY(-14%) rotate(8deg) scale(1.06); }
+  55% { transform: translateY(-14%) rotate(-6deg) scale(1.06); }
+  75% { transform: translateY(-6%) rotate(3deg) scale(1.02); }
+}
+
+/* Rip a pack — scissors snip their way across */
+.dash-tile:hover .art-rip > svg {
+  animation: art-snip 0.32s var(--ease-in-out) infinite alternate, art-cut 2.4s var(--ease-in-out) infinite;
+}
+@keyframes art-snip {
+  from { scale: 1 1; }
+  to { scale: 1 0.62; }
+}
+@keyframes art-cut {
+  0%, 100% { translate: -18% 0; }
+  50% { translate: 14% 0; }
+}
+
+/* Ship cards — the box rides a conveyor across */
+.dash-tile:hover .art-ship > svg {
+  animation: art-conveyor 1.8s linear infinite;
+}
+@keyframes art-conveyor {
+  0% { opacity: 0; transform: translateX(-70%) translateY(0); }
+  15% { opacity: 1; }
+  30% { transform: translateX(-28%) translateY(-6%); }
+  45% { transform: translateX(0) translateY(0); }
+  60% { transform: translateX(26%) translateY(-6%); }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(70%) translateY(0); }
+}
+
+/* Marketplace — the storefront swings like a hanging sign */
+.dash-tile:hover .art-market > svg {
+  transform-origin: 50% 0%;
+  animation: art-swing 1.8s var(--ease-in-out) infinite;
+}
+@keyframes art-swing {
+  0%, 100% { transform: rotate(9deg); }
+  50% { transform: rotate(-9deg); }
+}
+
+/* Submit cards — the upload arrow launches up on repeat */
+.dash-tile:hover .art-submit > svg {
+  animation: art-launch 1.3s cubic-bezier(0.5, 0, 0.2, 1) infinite;
+}
+@keyframes art-launch {
+  0% { opacity: 0; transform: translateY(35%) scale(0.9); }
+  25% { opacity: 1; transform: translateY(0) scale(1); }
+  60% { opacity: 1; transform: translateY(-8%) scale(1); }
+  100% { opacity: 0; transform: translateY(-55%) scale(1.05); }
+}
+
 /* Film grain overlay — sits above everything, never interactive */
 .grain {
   position: fixed;
