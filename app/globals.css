@@ -977,10 +977,10 @@
 }
 .tile-art {
   position: absolute;
-  right: -8%;
-  bottom: -22%;
+  right: -5%;
+  bottom: -20%;
   z-index: -1;
-  height: 135%;
+  height: 100%;
   aspect-ratio: 1;
   color: var(--accent-ink);
   opacity: 0;
