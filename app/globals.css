@@ -1000,25 +1000,30 @@
   transform: none;
 }
 
-/* Vault — box bobs while the lid pops open */
+/* Vault — the combination dial spins (forward, back, forward) and the
+   door gives a small clunk as it unlocks. Everything but the door frame
+   (first child) rotates around the dial's centre at 12,12. */
+.art-vault > svg > :not(:first-child) {
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+}
+.dash-tile:hover .art-vault > svg > :not(:first-child) {
+  animation: art-dial 2.6s cubic-bezier(0.5, 0, 0.3, 1) infinite;
+}
 .dash-tile:hover .art-vault > svg {
-  animation: art-bob 1.6s var(--ease-in-out) infinite;
+  animation: art-clunk 2.6s var(--ease-out) infinite;
 }
-.art-vault > svg > :first-child {
-  transform-box: fill-box;
-  transform-origin: 0% 100%;
+@keyframes art-dial {
+  0% { transform: rotate(0deg); }
+  30% { transform: rotate(300deg); }
+  52% { transform: rotate(120deg); }
+  72% { transform: rotate(270deg); }
+  86%, 100% { transform: rotate(360deg); }
 }
-.dash-tile:hover .art-vault > svg > :first-child {
-  animation: art-lid 1.6s var(--ease-in-out) infinite;
-}
-@keyframes art-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5%); }
-}
-@keyframes art-lid {
-  0%, 30%, 100% { transform: translateY(0) rotate(0deg); }
-  45% { transform: translateY(-22%) rotate(-24deg); }
-  70% { transform: translateY(-12%) rotate(-14deg); }
+@keyframes art-clunk {
+  0%, 86%, 100% { transform: scale(1); }
+  90% { transform: scale(1.05); }
+  95% { transform: scale(0.98); }
 }
 
 /* Balance — coins drop into the wallet, which squashes on each catch */

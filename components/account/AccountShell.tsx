@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { Archive, Heart, LayoutDashboard, Package, Settings, Tag as TagIcon, Wallet } from "lucide-react";
+import { Heart, LayoutDashboard, Package, Settings, Tag as TagIcon, Vault, Wallet } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Tag from "@/components/ui/Tag";
 import { useAccount, useAccountStats } from "./AccountProvider";
@@ -13,7 +13,7 @@ import { num, usd } from "@/lib/data";
 
 const tabs = [
   { href: "/account", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/account/vault", label: "Vault", icon: Archive },
+  { href: "/account/vault", label: "Vault", icon: Vault },
   { href: "/account/favorites", label: "Favorites", icon: Heart },
   { href: "/account/offers", label: "Offers", icon: TagIcon, badge: "offers" as const },
   { href: "/account/wallet", label: "Wallet", icon: Wallet },

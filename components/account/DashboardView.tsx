@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Archive, ArrowDownLeft, Package, Scissors, Sparkles, Store, Tag as TagIcon, Trophy, Upload, Wallet, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, ArrowDownLeft, Package, Scissors, Sparkles, Store, Tag as TagIcon, Trophy, Upload, Vault, Wallet, type LucideIcon } from "lucide-react";
 import { useAccount, useAccountStats } from "./AccountProvider";
 import { PanelTitle, StatusChip } from "./AccountShell";
 import { OrderTimeline } from "./OrdersView";
@@ -41,7 +41,7 @@ export default function DashboardView() {
   const activeOrder = state.orders.find((o) => o.status !== "delivered");
 
   const tiles = [
-    { label: "Vault value", value: usd(stats.vaultValue), sub: `${stats.vaultCount} cards · ${stats.listedCount} listed`, href: "/account/vault", icon: Archive, art: "vault", accent: true },
+    { label: "Vault value", value: usd(stats.vaultValue), sub: `${stats.vaultCount} cards · ${stats.listedCount} listed`, href: "/account/vault", icon: Vault, art: "vault", accent: true },
     { label: "Balance", value: usd(state.balance, true), sub: "Add funds", href: "/account/wallet", icon: Wallet, art: "wallet" },
     { label: "Points", value: num(state.points), sub: `+${num(state.pointsToday)} today`, href: "/leaderboard", icon: Sparkles, art: "points" },
     { label: "Monthly rank", value: `#${num(state.rank)}`, sub: "View leaderboard", href: "/leaderboard", icon: Trophy, art: "rank" },
