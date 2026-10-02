@@ -25,7 +25,7 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
     };
   }, [open, onClose]);
 
-  const links = [...primaryNav, { label: "How It Works?", href: "/how-it-works" }];
+  const links = [...primaryNav, { label: "How It Works?", href: "/how-it-works" }, { label: "My Account", href: "/account" }];
 
   return (
     <div

@@ -9,6 +9,9 @@ import Button from "@/components/ui/Button";
 import { LiveDot } from "@/components/ui/Tag";
 import MobileMenu from "./MobileMenu";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useAccount } from "@/components/account/AccountProvider";
+import Image from "next/image";
+import { usd } from "@/lib/data";
 
 const crumbLabel = (pathname: string) => {
   const seg = pathname.split("/").filter((s) => s && s !== "product");
@@ -27,6 +30,7 @@ export default function TopBar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const auth = useAuth();
+  const { state: account } = useAccount();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -82,6 +86,17 @@ export default function TopBar() {
             <Button variant="primary" size="sm" onClick={() => auth.open("signup")}>
               <UserPlus className="h-4 w-4" /> Sign Up
             </Button>
+            <Link
+              href="/account"
+              aria-label="Your account (demo)"
+              title="Demo account"
+              className={`flex h-9 items-center gap-2 rounded-sm border pl-1 pr-1 transition-colors md:pr-3 ${
+                pathname.startsWith("/account") ? "border-accent" : "border-line-strong hover:border-accent"
+              }`}
+            >
+              <Image src={account.user.avatar} alt="" width={28} height={28} className="h-7 w-7 rounded-[5px] object-cover" />
+              <span className="hidden font-mono text-[12px] tabular-nums text-fg md:inline">{usd(account.balance)}</span>
+            </Link>
             <button
               type="button"
               onClick={() => setOpen((o) => !o)}

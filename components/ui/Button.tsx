@@ -41,9 +41,16 @@ const sizes: Record<Size, string> = {
 // Icons and other elements pass through untouched.
 function splitLabel(children: ReactNode) {
   let i = 0;
-  return Children.map(children, (node) =>
+  // Merge adjacent text pieces ("Keep " + "it") so they roll as one phrase.
+  const parts = Children.toArray(children).reduce<ReactNode[]>((acc, node) => {
+    const last = acc[acc.length - 1];
+    if ((typeof node === "string" || typeof node === "number") && typeof last === "string") acc[acc.length - 1] = last + String(node);
+    else acc.push(typeof node === "number" ? String(node) : node);
+    return acc;
+  }, []);
+  return parts.map((node, w) =>
     typeof node === "string" ? (
-      <span className="btn-word">
+      <span key={`w${w}`} className="btn-word">
         {node.split("").map((ch) => (
           <span key={i} className="btn-ch" style={{ "--i": i++ } as React.CSSProperties}>
             {ch === " " ? " " : ch}

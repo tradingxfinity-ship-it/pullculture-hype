@@ -6,6 +6,7 @@ import { ArrowLeft, RefreshCcw, ShieldCheck, Truck } from "lucide-react";
 import BuyPanel from "@/components/sections/packs/BuyPanel";
 import PullTiers from "@/components/sections/packs/PullTiers";
 import HitList from "@/components/sections/packs/HitList";
+import FavoriteButton from "@/components/account/FavoriteButton";
 import SectionHeader from "@/components/ui/SectionHeader";
 import Reveal from "@/components/ui/Reveal";
 import SplitHeading from "@/components/ui/SplitHeading";
@@ -59,10 +60,11 @@ export default async function ProductPage({ params }: { params: Promise<{ name: 
           {/* Details */}
           <div className="col-span-4 flex flex-col md:col-span-8 lg:col-span-5 lg:pl-6">
             <Reveal className="is-in">
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Tag tone={pack.tier.toLowerCase() as "silver" | "gold" | "platinum"}>{pack.tier}</Tag>
                 <Tag>{pack.categoryLabel}</Tag>
                 <Tag tone="accent">Provably fair</Tag>
+                <FavoriteButton kind="packs" id={pack.name} label={pack.name} variant="icon" className="ml-auto" />
               </div>
               <SplitHeading as="h1" lines={[title, <span key="r" className="text-fg-dim">{rest.join(" ")}</span>]} className="mt-6 text-display-md font-bold" />
               <p className="mt-6 font-mono text-4xl tabular-nums text-accent">{usd(pack.price, true)}</p>
@@ -78,7 +80,7 @@ export default async function ProductPage({ params }: { params: Promise<{ name: 
               </dl>
 
               <div className="mt-8">
-                <BuyPanel name={pack.name} price={pack.price} />
+                <BuyPanel name={pack.name} slug={pack.slug} price={pack.price} />
               </div>
 
               <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-fg-muted">

@@ -23,7 +23,7 @@ function Stepper({ qty, setQty, size = "md" }: { qty: number; setQty: (n: number
 }
 
 // Inline purchase controls plus a bottom bar that docks once they scroll away.
-export default function BuyPanel({ name, price }: { name: string; price: number }) {
+export default function BuyPanel({ name, slug, price }: { name: string; slug: string; price: number }) {
   const [qty, setQty] = useState(1);
   const [docked, setDocked] = useState(false);
   const anchor = useRef<HTMLDivElement>(null);
@@ -40,7 +40,7 @@ export default function BuyPanel({ name, price }: { name: string; price: number 
     <>
       <div ref={anchor} className="flex flex-wrap items-center gap-3">
         <Stepper qty={qty} setQty={setQty} />
-        <Button size="lg" arrow magnetic className="flex-1">
+        <Button href={`/rip/${slug}?qty=${qty}`} size="lg" arrow magnetic className="flex-1">
           Buy Now · {usd(price * qty, true)}
         </Button>
       </div>
@@ -59,7 +59,7 @@ export default function BuyPanel({ name, price }: { name: string; price: number 
           </div>
           <div className="flex items-center gap-3">
             <Stepper qty={qty} setQty={setQty} size="sm" />
-            <Button size="md" tabIndex={docked ? 0 : -1}>
+            <Button href={`/rip/${slug}?qty=${qty}`} size="md" tabIndex={docked ? 0 : -1}>
               Buy Now
             </Button>
           </div>

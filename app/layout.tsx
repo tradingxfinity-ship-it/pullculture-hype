@@ -5,6 +5,8 @@ import TopBar from "@/components/layout/TopBar";
 import Announcement from "@/components/layout/Announcement";
 import Footer from "@/components/layout/Footer";
 import AuthProvider from "@/components/auth/AuthProvider";
+import AccountProvider from "@/components/account/AccountProvider";
+import ToastProvider from "@/components/ui/Toast";
 import "./globals.css";
 
 const sans = Geist({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
@@ -26,15 +28,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-sm focus:bg-accent focus:px-4 focus:py-2 focus:text-accent-ink">
           Skip to content
         </a>
-        <AuthProvider>
-          <Rail />
-          <div className="lg:pl-rail">
-            <Announcement />
-            <TopBar />
-            <main id="main">{children}</main>
-            <Footer />
-          </div>
-        </AuthProvider>
+        <AccountProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <Rail />
+              <div className="lg:pl-rail">
+                <Announcement />
+                <TopBar />
+                <main id="main">{children}</main>
+                <Footer />
+              </div>
+            </AuthProvider>
+          </ToastProvider>
+        </AccountProvider>
         <div className="grain" aria-hidden />
       </body>
     </html>
