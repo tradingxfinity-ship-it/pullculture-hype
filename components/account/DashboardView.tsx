@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Archive, ArrowDownLeft, Sparkles, Store, Tag as TagIcon, Trophy, Upload, Wallet, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, Archive, ArrowDownLeft, Package, Scissors, Sparkles, Store, Tag as TagIcon, Trophy, Upload, Wallet, type LucideIcon } from "lucide-react";
 import { useAccount, useAccountStats } from "./AccountProvider";
 import { PanelTitle, StatusChip } from "./AccountShell";
 import { OrderTimeline } from "./OrdersView";
@@ -10,6 +10,8 @@ import { fmtDate } from "@/lib/account";
 import { num, usd } from "@/lib/data";
 
 const quick = [
+  { href: "/pack", label: "Rip a pack", body: "15 packs · from $25", icon: Scissors },
+  { href: "/account/vault", label: "Ship cards", body: "Send hits to your door", icon: Package },
   { href: "/marketplace", label: "Marketplace", body: "Bid, buy and trade", icon: Store },
   { href: "/submit", label: "Submit cards", body: "Sell or grade yours", icon: Upload },
 ];
@@ -83,7 +85,7 @@ export default function DashboardView() {
       </div>
 
       {/* Quick actions */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {quick.map((q) => {
           const I = q.icon;
           return (
