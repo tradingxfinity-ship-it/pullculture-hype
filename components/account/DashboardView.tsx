@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Archive, ArrowDownLeft, Package, Scissors, Sparkles, Store, Tag as TagIcon, Trophy, Upload, Wallet, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, Archive, ArrowDownLeft, Sparkles, Store, Tag as TagIcon, Trophy, Upload, Wallet, type LucideIcon } from "lucide-react";
 import { useAccount, useAccountStats } from "./AccountProvider";
 import { PanelTitle, StatusChip } from "./AccountShell";
 import { OrderTimeline } from "./OrdersView";
@@ -10,10 +10,8 @@ import { fmtDate } from "@/lib/account";
 import { num, usd } from "@/lib/data";
 
 const quick = [
-  { href: "/pack", label: "Rip a pack", body: "15 packs · from $25", icon: Scissors, art: "rip" },
-  { href: "/account/vault", label: "Ship cards", body: "Send hits to your door", icon: Package, art: "ship" },
-  { href: "/marketplace", label: "Marketplace", body: "Bid, buy and trade", icon: Store, art: "market" },
-  { href: "/submit", label: "Submit cards", body: "Sell or grade yours", icon: Upload, art: "submit" },
+  { href: "/marketplace", label: "Marketplace", body: "Bid, buy and trade", icon: Store },
+  { href: "/submit", label: "Submit cards", body: "Sell or grade yours", icon: Upload },
 ];
 
 // Big faded icon behind a dashboard tile; animates while the tile is hovered
@@ -85,18 +83,17 @@ export default function DashboardView() {
       </div>
 
       {/* Quick actions */}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3">
         {quick.map((q) => {
           const I = q.icon;
           return (
-            <Link key={q.href} href={q.href} className="dash-tile group relative isolate flex items-center gap-4 overflow-hidden rounded-md border border-line p-4">
-              <TileArt icon={I} art={q.art} />
-              <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-sm bg-white/5 text-fg transition-colors group-hover:bg-black/10 group-hover:text-accent-ink">
+            <Link key={q.href} href={q.href} className="group flex items-center gap-4 rounded-md border border-line p-4 transition-all hover:-translate-y-0.5 hover:border-accent">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-sm bg-white/5 text-fg transition-colors group-hover:bg-accent group-hover:text-accent-ink">
                 <I className="h-5 w-5" strokeWidth={1.75} />
               </span>
-              <span className="relative min-w-0">
-                <span className="block truncate font-semibold text-fg transition-colors group-hover:text-accent-ink">{q.label}</span>
-                <span className="block truncate text-xs text-fg-dim transition-colors group-hover:text-black/65">{q.body}</span>
+              <span className="min-w-0">
+                <span className="block truncate font-semibold text-fg">{q.label}</span>
+                <span className="block truncate text-xs text-fg-dim">{q.body}</span>
               </span>
             </Link>
           );

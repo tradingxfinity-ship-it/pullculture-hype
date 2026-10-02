@@ -1097,54 +1097,6 @@
   75% { transform: translateY(-6%) rotate(3deg) scale(1.02); }
 }
 
-/* Rip a pack — scissors snip their way across */
-.dash-tile:hover .art-rip > svg {
-  animation: art-snip 0.32s var(--ease-in-out) infinite alternate, art-cut 2.4s var(--ease-in-out) infinite;
-}
-@keyframes art-snip {
-  from { scale: 1 1; }
-  to { scale: 1 0.62; }
-}
-@keyframes art-cut {
-  0%, 100% { translate: -18% 0; }
-  50% { translate: 14% 0; }
-}
-
-/* Ship cards — the box rides a conveyor across */
-.dash-tile:hover .art-ship > svg {
-  animation: art-conveyor 1.8s linear infinite;
-}
-@keyframes art-conveyor {
-  0% { opacity: 0; transform: translateX(-70%) translateY(0); }
-  15% { opacity: 1; }
-  30% { transform: translateX(-28%) translateY(-6%); }
-  45% { transform: translateX(0) translateY(0); }
-  60% { transform: translateX(26%) translateY(-6%); }
-  85% { opacity: 1; }
-  100% { opacity: 0; transform: translateX(70%) translateY(0); }
-}
-
-/* Marketplace — the storefront swings like a hanging sign */
-.dash-tile:hover .art-market > svg {
-  transform-origin: 50% 0%;
-  animation: art-swing 1.8s var(--ease-in-out) infinite;
-}
-@keyframes art-swing {
-  0%, 100% { transform: rotate(9deg); }
-  50% { transform: rotate(-9deg); }
-}
-
-/* Submit cards — the upload arrow launches up on repeat */
-.dash-tile:hover .art-submit > svg {
-  animation: art-launch 1.3s cubic-bezier(0.5, 0, 0.2, 1) infinite;
-}
-@keyframes art-launch {
-  0% { opacity: 0; transform: translateY(35%) scale(0.9); }
-  25% { opacity: 1; transform: translateY(0) scale(1); }
-  60% { opacity: 1; transform: translateY(-8%) scale(1); }
-  100% { opacity: 0; transform: translateY(-55%) scale(1.05); }
-}
-
 /* Film grain overlay — sits above everything, never interactive */
 .grain {
   position: fixed;
