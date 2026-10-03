@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Check as CheckIcon, ChevronLeft, ChevronRight, Copy, Info, MapPin, Minus, Pencil, Plus, Trash2, X } from "lucide-react";
+import { Check as CheckIcon, ChevronLeft, ChevronRight, Copy, Info, MapPin, Minus, Pencil, Plus, X } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { Field, Input, Select } from "@/components/ui/Form";
+import CardDetailsStep, { GRADERS, cardIssues, cardTitle, newCard, revokePhotos, type CardRow } from "./CardDetailsStep";
+import { usd } from "@/lib/data";
 import { useToast } from "@/components/ui/Toast";
 import { useAccount } from "@/components/account/AccountProvider";
 
@@ -12,8 +14,6 @@ import { useAccount } from "@/components/account/AccountProvider";
 // shipping address, how many cards, card details, return address, review.
 // No submissions backend exists yet, so the final step says nothing was sent.
 
-const GRADERS = ["PSA", "CGC", "BGS", "SGC"] as const;
-type Grader = (typeof GRADERS)[number];
 
 const INTAKE = ["HYP3 INTAKE", "1234 N. HYP3 Rd.", "STE 123", "San Antonio, TX", "78254"];
 
@@ -38,21 +38,25 @@ const steps = [
   { title: "Review Order", body: "Please review your order below to verify everything is correct." },
 ];
 
-type CardRow = { id: number; details: string; grader: Grader };
-let rowId = 1;
-const newRow = (): CardRow => ({ id: rowId++, details: "", grader: "PSA" });
 
 export default function SubmitFlow({ onClose, embedded }: { onClose?: () => void; embedded?: boolean }) {
   const { state, dispatch } = useAccount();
   const toast = useToast();
   const [step, setStep] = useState(0);
   const [dir, setDir] = useState<1 | -1>(1);
-  const [cards, setCards] = useState<CardRow[]>(() => [newRow()]);
+  const [cards, setCards] = useState<CardRow[]>(() => [newCard()]);
+  const [openCard, setOpenCard] = useState<number | null>(null);
+  const [showErrors, setShowErrors] = useState(false);
   const [addressId, setAddressId] = useState<string | null>(null);
   const [addingAddress, setAddingAddress] = useState(false);
   const [country, setCountry] = useState<"US" | "CA">("US");
   const [done, setDone] = useState(false);
   const panel = useRef<HTMLDivElement>(null);
+
+  // Photo previews outlive step 4 (review shows them), so free them only when the flow closes.
+  const cardsRef = useRef(cards);
+  cardsRef.current = cards;
+  useEffect(() => () => cardsRef.current.forEach(revokePhotos), []);
 
   const addresses = state.addresses;
   const address = addresses.find((a) => a.id === (addressId ?? addresses.find((x) => x.isDefault)?.id ?? addresses[0]?.id));
@@ -65,7 +69,8 @@ export default function SubmitFlow({ onClose, embedded }: { onClose?: () => void
 
   const setCount = (n: number) => {
     const count = Math.max(1, Math.min(50, n));
-    setCards((c) => (count > c.length ? [...c, ...Array.from({ length: count - c.length }, newRow)] : c.slice(0, count)));
+    if (count < cards.length) cards.slice(count).forEach(revokePhotos);
+    setCards((c) => (count > c.length ? [...c, ...Array.from({ length: count - c.length }, newCard)] : c.slice(0, count)));
   };
 
   // Validate the fields shown in the current step.
@@ -74,6 +79,15 @@ export default function SubmitFlow({ onClose, embedded }: { onClose?: () => void
     for (const f of Array.from(fields)) {
       if (!f.checkValidity()) {
         f.reportValidity();
+        return false;
+      }
+    }
+    if (step === 3) {
+      const bad = cards.find((c) => cardIssues(c).length > 0);
+      if (bad) {
+        setShowErrors(true);
+        setOpenCard(bad.id);
+        requestAnimationFrame(() => panel.current?.querySelector(`[data-card="${bad.id}"]`)?.scrollIntoView({ block: "nearest", behavior: "smooth" }));
         return false;
       }
     }
@@ -127,7 +141,10 @@ export default function SubmitFlow({ onClose, embedded }: { onClose?: () => void
   };
 
   const restart = () => {
-    setCards([newRow()]);
+    cards.forEach(revokePhotos);
+    setCards([newCard()]);
+    setOpenCard(null);
+    setShowErrors(false);
     setAddressId(null);
     setAddingAddress(false);
     setDone(false);
@@ -194,7 +211,7 @@ export default function SubmitFlow({ onClose, embedded }: { onClose?: () => void
             </div>
             <h3 className="mt-6 text-2xl font-bold tracking-[-0.03em]">Submission ready</h3>
             <p className="mt-2 text-fg-muted">
-              {cards.length} graded card{cards.length > 1 ? "s" : ""} to vault · returns to {address ? `${address.city}, ${address.region}` : "your address"}
+              {cards.length} graded card{cards.length > 1 ? "s" : ""} · {usd(cards.reduce((n, c) => n + (Number(c.value) || 0), 0))} declared · returns to {address ? `${address.city}, ${address.region}` : "your address"}
             </p>
             <p role="status" className="mt-6 flex max-w-lg gap-2.5 rounded-sm border border-accent/30 bg-accent/[0.06] p-3 text-[13px] leading-relaxed text-fg-2">
               <Info className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
@@ -292,56 +309,18 @@ export default function SubmitFlow({ onClose, embedded }: { onClose?: () => void
 
               {/* 4 — Card details */}
               {step === 3 && (
-                <div className="space-y-5">
-                  {cards.map((c, i) => (
-                    <div key={c.id}>
-                      <div className="mb-1.5 flex items-center justify-between">
-                        <label htmlFor={`card-${c.id}`} className="font-mono text-[10px] uppercase tracking-[0.12em] text-fg-muted">
-                          Card {i + 1}
-                        </label>
-                        {cards.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => setCards((cs) => cs.filter((x) => x.id !== c.id))}
-                            className="inline-flex items-center gap-1 text-[12px] text-fg-dim transition-colors hover:text-red-400"
-                          >
-                            <Trash2 className="h-3 w-3" /> Remove
-                          </button>
-                        )}
-                      </div>
-                      <div className="flex gap-2">
-                        <div className="min-w-0 flex-1">
-                          <Input
-                            id={`card-${c.id}`}
-                            data-step-field
-                            required
-                            value={c.details}
-                            onChange={(e) => setCards((cs) => cs.map((x) => (x.id === c.id ? { ...x, details: e.target.value } : x)))}
-                            placeholder="Enter card details here"
-                          />
-                        </div>
-                        <Select
-                          aria-label={`Grading company for card ${i + 1}`}
-                          value={c.grader}
-                          onChange={(e) => setCards((cs) => cs.map((x) => (x.id === c.id ? { ...x, grader: e.target.value as Grader } : x)))}
-                          className="w-28 shrink-0"
-                        >
-                          {GRADERS.map((g) => (
-                            <option key={g}>{g}</option>
-                          ))}
-                        </Select>
-                      </div>
-                      {i === 0 && <p className="mt-1.5 text-xs text-fg-dim">Ex. Year, Player Name, Set, Card Number, etc.</p>}
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => setCount(cards.length + 1)}
-                    className="inline-flex h-10 items-center gap-2 rounded-sm border border-accent/60 px-4 text-[13px] font-semibold text-accent transition-colors hover:bg-accent/10"
-                  >
-                    <Plus className="h-4 w-4" /> Add A Card
-                  </button>
-                </div>
+                <CardDetailsStep
+                  cards={cards}
+                  setCards={setCards}
+                  openId={openCard ?? cards[0]?.id ?? null}
+                  setOpenId={setOpenCard}
+                  showErrors={showErrors}
+                  addCard={() => {
+                    const c = newCard();
+                    setCards((cs) => [...cs, c]);
+                    setOpenCard(c.id);
+                  }}
+                />
               )}
 
               {/* 5 — Return address (5b: new address form) */}
@@ -440,14 +419,29 @@ export default function SubmitFlow({ onClose, embedded }: { onClose?: () => void
                     <div className="mt-3 h-px bg-accent/40" aria-hidden />
                     <ol className="mt-3 divide-y divide-line">
                       {cards.map((c, i) => (
-                        <li key={c.id} className="flex items-baseline gap-3 py-2.5 text-sm">
-                          <span className="font-mono text-fg-dim">#{i + 1}</span>
-                          <span className="text-line-strong">|</span>
-                          <span className="min-w-0 flex-1 text-fg-2">{c.details}</span>
-                          <span className="shrink-0 font-mono text-[11px] uppercase tracking-[0.1em] text-fg-muted">{c.grader}</span>
+                        <li key={c.id} className="flex items-center gap-3 py-3 text-sm">
+                          <span className="w-6 font-mono text-fg-dim">#{i + 1}</span>
+                          {c.front ? (
+                            // eslint-disable-next-line @next/next/no-img-element -- local object URL preview
+                            <img src={c.front} alt="" className="h-12 w-9 shrink-0 rounded-[4px] object-cover ring-1 ring-line-strong" />
+                          ) : (
+                            <span className="h-12 w-9 shrink-0 rounded-[4px] bg-ink-3" />
+                          )}
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-fg-2">{cardTitle(c)}</span>
+                            <span className="block truncate font-mono text-[10px] uppercase tracking-[0.1em] text-fg-dim">
+                              {c.grader} {c.grade} · cert {c.cert}
+                              {c.auto && " · auto"} · {c.category}
+                            </span>
+                          </span>
+                          <span className="shrink-0 font-mono tabular-nums text-fg">{usd(Number(c.value) || 0)}</span>
                         </li>
                       ))}
                     </ol>
+                    <div className="mt-3 flex items-center justify-between border-t border-accent/40 pt-3 text-sm">
+                      <span className="text-fg-muted">Total declared value</span>
+                      <span className="font-mono tabular-nums text-accent">{usd(cards.reduce((n, c) => n + (Number(c.value) || 0), 0))}</span>
+                    </div>
                   </section>
                   {address && (
                     <section>
