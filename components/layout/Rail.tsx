@@ -12,6 +12,7 @@ import { sportIcon } from "@/components/ui/SportIcons";
 import { useIconPlayer } from "@/components/ui/useIconPlayer";
 import { categoryNav, isActive, primaryNav } from "@/lib/nav";
 import { useAccount } from "@/components/account/AccountProvider";
+import { useSubmitCards } from "@/components/submit/SubmitProvider";
 import { usd } from "@/lib/data";
 
 // Desktop side rail. Same information architecture as before — primary
@@ -24,6 +25,7 @@ export default function Rail() {
     state: { user, balance },
   } = useAccount();
   const inAccount = pathname.startsWith("/account");
+  const submitCards = useSubmitCards();
 
   return (
     <aside className="fixed inset-y-0 left-0 z-40 hidden w-rail flex-col border-r border-line bg-ink-1 lg:flex">
@@ -123,7 +125,7 @@ export default function Rail() {
         <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-fg-dim">
           <LiveDot /> Vault open · Drops Fri
         </div>
-        <Button href="/submit" variant="primary" size="md" full arrow magnetic>
+        <Button onClick={submitCards.open} variant="primary" size="md" full arrow magnetic>
           Submit Cards
         </Button>
       </div>

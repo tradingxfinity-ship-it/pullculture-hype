@@ -1,24 +1,15 @@
 import type { Metadata } from "next";
-import PageHeader from "@/components/ui/PageHeader";
-import SubmitForm from "@/components/sections/submit/SubmitForm";
+import SubmitFlow from "@/components/submit/SubmitFlow";
 
 export const metadata: Metadata = { title: "Submit Cards" };
 
+// Same flow as the Submit Cards popup, as a standalone page for direct links.
 export default function SubmitPage() {
   return (
-    <>
-      <PageHeader
-        compact
-        eyebrow="Submit Cards"
-        title={[
-          <>
-            Submit your <em className="font-serif font-normal italic tracking-[-0.02em] text-accent">cards.</em>
-          </>,
-        ]}
-      />
-      <section className="frame py-12 md:py-16">
-        <SubmitForm />
-      </section>
-    </>
+    <section className="frame flex justify-center py-12 md:py-16">
+      <div className="w-full max-w-[780px]">
+        <SubmitFlow embedded />
+      </div>
+    </section>
   );
 }

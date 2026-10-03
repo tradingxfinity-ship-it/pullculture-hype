@@ -7,6 +7,7 @@ import Footer from "@/components/layout/Footer";
 import AuthProvider from "@/components/auth/AuthProvider";
 import AccountProvider from "@/components/account/AccountProvider";
 import ToastProvider from "@/components/ui/Toast";
+import SubmitProvider from "@/components/submit/SubmitProvider";
 import "./globals.css";
 
 const sans = Geist({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
@@ -31,13 +32,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AccountProvider>
           <ToastProvider>
             <AuthProvider>
-              <Rail />
-              <div className="lg:pl-rail">
-                <Announcement />
-                <TopBar />
-                <main id="main">{children}</main>
-                <Footer />
-              </div>
+              <SubmitProvider>
+                <Rail />
+                <div className="lg:pl-rail">
+                  <Announcement />
+                  <TopBar />
+                  <main id="main">{children}</main>
+                  <Footer />
+                </div>
+              </SubmitProvider>
             </AuthProvider>
           </ToastProvider>
         </AccountProvider>
