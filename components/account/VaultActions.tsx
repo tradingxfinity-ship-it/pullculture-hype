@@ -22,11 +22,13 @@ export function VaultCard({
   selected,
   onSelect,
   onAction,
+  onOpen,
 }: {
   item: VaultItem;
   selected?: boolean;
   onSelect?: () => void;
   onAction: (a: "sell" | "list" | "ship" | "unlist", item: VaultItem) => void;
+  onOpen?: (item: VaultItem) => void;
 }) {
   const locked = item.status === "shipping";
   return (
@@ -37,7 +39,14 @@ export function VaultCard({
           <Image src={item.image} alt={`${item.name} ${item.grade}`} fill sizes="(min-width:1024px) 22vw, 45vw" className="object-contain" />
           <div className="slab-sweep" style={{ maskImage: `url(${item.image})`, WebkitMaskImage: `url(${item.image})` }} aria-hidden />
         </div>
-        <div className="absolute inset-x-3 top-3 z-[2] flex items-center justify-between">
+        {onOpen && (
+          <button type="button" onClick={() => onOpen(item)} aria-label={`View details and price history for ${item.name}`} className="absolute inset-0 z-[1] cursor-pointer rounded-md">
+            <span className="absolute bottom-3 left-1/2 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-full bg-black/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-fg opacity-0 backdrop-blur transition-all duration-base group-hover:translate-y-0 group-hover:opacity-100">
+              View details
+            </span>
+          </button>
+        )}
+        <div className="pointer-events-none absolute inset-x-3 top-3 z-[2] flex items-center justify-between [&>*]:pointer-events-auto">
           {onSelect && !locked ? (
             <button
               type="button"
@@ -61,7 +70,15 @@ export function VaultCard({
         <p className="eyebrow truncate">
           {item.grade} · {fmtDate(item.pulledAt)}
         </p>
-        <h3 className="mt-1.5 truncate text-[17px] font-semibold tracking-[-0.02em] text-fg">{item.name}</h3>
+        <h3 className="mt-1.5 truncate text-[17px] font-semibold tracking-[-0.02em] text-fg">
+          {onOpen ? (
+            <button type="button" onClick={() => onOpen(item)} className="max-w-full truncate text-left transition-colors hover:text-accent">
+              {item.name}
+            </button>
+          ) : (
+            item.name
+          )}
+        </h3>
         <p className="truncate text-[13px] text-fg-muted">{item.set}</p>
 
         <dl className="mt-4 grid grid-cols-2 border-t border-line pt-3">

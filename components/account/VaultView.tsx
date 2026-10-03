@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Archive, ArrowDownUp, Package, Search, X, Zap } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/Toast";
 import { useAccount } from "./AccountProvider";
 import { EmptyState } from "./AccountShell";
 import { VaultActionModals, VaultCard, type PendingAction } from "./VaultActions";
+import VaultDetail from "./VaultDetail";
 import { usd } from "@/lib/data";
 import type { VaultItem, VaultStatus } from "@/lib/account";
 
@@ -31,6 +32,8 @@ export default function VaultView() {
   const [sort, setSort] = useState<(typeof sorts)[number]["key"]>("new");
   const [selected, setSelected] = useState<string[]>([]);
   const [pending, setPending] = useState<PendingAction>(null);
+  const [detail, setDetail] = useState<string | null>(null);
+  const closeDetail = useCallback(() => setDetail(null), []);
 
   const items = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -111,7 +114,7 @@ export default function VaultView() {
         <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-6 xl:grid-cols-4">
           {items.map((v, i) => (
             <Reveal key={v.id} delay={(i % 4) * 60}>
-              <VaultCard item={v} selected={selected.includes(v.id)} onSelect={() => toggle(v.id)} onAction={onAction} />
+              <VaultCard item={v} selected={selected.includes(v.id)} onSelect={() => toggle(v.id)} onAction={onAction} onOpen={(it) => setDetail(it.id)} />
             </Reveal>
           ))}
         </div>
@@ -158,6 +161,7 @@ export default function VaultView() {
         </div>
       </div>
 
+      <VaultDetail id={detail} onClose={closeDetail} onAction={onAction} />
       <VaultActionModals pending={pending} onDone={() => setPending(null)} />
     </>
   );

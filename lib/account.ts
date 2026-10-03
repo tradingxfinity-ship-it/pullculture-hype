@@ -135,3 +135,46 @@ export const orderSteps: { key: OrderStatus; label: string }[] = [
 
 export const fmtDate = (iso: string) =>
   new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(iso));
+
+/* ------------------------------------------------------------------ */
+/* Demo price history                                                  */
+/* ------------------------------------------------------------------ */
+
+// Deterministic PRNG so each card keeps the same sample history.
+function seeded(seed: string) {
+  let h = 1779033703 ^ seed.length;
+  for (let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 3432918353);
+  return () => {
+    h = Math.imul(h ^ (h >>> 16), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    return ((h ^= h >>> 16) >>> 0) / 4294967296;
+  };
+}
+
+/** Sample daily value history for a vault card, ending today at its current value. */
+export function priceHistory(item: Pick<VaultItem, "id" | "value">, days = 365): { date: string; value: number }[] {
+  const rand = seeded(item.id);
+  const walk: number[] = [1];
+  for (let i = 1; i < days; i++) walk.push(walk[i - 1] * (1 + (rand() - 0.48) * 0.035));
+  // Tilt the walk so it lands exactly on today's value.
+  const end = walk[days - 1];
+  const start = 0.78 + rand() * 0.35;
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  return walk.map((w, i) => {
+    const t = i / (days - 1);
+    const scale = (start * (1 - t) + t) / (end ** t);
+    const d = new Date(today);
+    d.setUTCDate(today.getUTCDate() - (days - 1 - i));
+    return { date: d.toISOString().slice(0, 10), value: Math.max(1, Math.round(item.value * w * scale)) };
+  });
+}
+
+/** Sample recent comparable sales around the card's value. */
+export function sampleComps(item: Pick<VaultItem, "id" | "value" | "grade">, history: { date: string; value: number }[]) {
+  const rand = seeded(`${item.id}-comps`);
+  return [3, 11, 19, 34, 52].map((ago) => {
+    const pt = history[Math.max(0, history.length - 1 - ago)];
+    return { date: pt.date, grade: item.grade, price: Math.round(pt.value * (0.94 + rand() * 0.12)) };
+  });
+}

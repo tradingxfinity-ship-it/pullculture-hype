@@ -1102,6 +1102,15 @@
   75% { transform: translateY(-6%) rotate(3deg) scale(1.02); }
 }
 
+.drawer-in {
+  animation: drawer-in 550ms var(--ease-out) both;
+}
+@keyframes drawer-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+
 /* Film grain overlay — sits above everything, never interactive */
 .grain {
   position: fixed;
