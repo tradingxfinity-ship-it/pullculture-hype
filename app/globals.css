@@ -873,39 +873,306 @@
 
 /* ------------------------------------------------------------------
    Pack opening (components/rip/RipExperience.tsx)
+   .rip-stage is the cut-out pack box (pack art is 0.5 × 0.87 of the
+   square image). Vars set from JS: --p tear progress 0–1, --rx/--ry
+   pack tilt, --mx foil position, --crx/--cry/--gx/--gy card tilt and
+   glare, --tier the pull's colour, --strength 0.4 / 0.7 / 1 by tier.
    ------------------------------------------------------------------ */
-.rip-pack-idle {
-  animation: float 6s var(--ease-in-out) infinite;
+.rip-stage {
+  --p: 0;
+  --rx: 0deg;
+  --ry: 0deg;
+  --mx: 50%;
+  position: relative;
+  width: clamp(150px, calc((100svh - 470px) / 1.74), 250px);
+  aspect-ratio: 1 / 1.74;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  perspective: 1100px;
 }
-.rip-shake {
-  animation: rip-shake 520ms cubic-bezier(0.36, 0.07, 0.19, 0.97) 900ms both;
+.rip-stage.is-tearing {
+  cursor: grabbing;
 }
-@keyframes rip-shake {
-  10%, 90% { transform: translate3d(-2px, 0, 0) rotate(-1deg); }
-  20%, 80% { transform: translate3d(4px, 0, 0) rotate(1.5deg); }
-  30%, 50%, 70% { transform: translate3d(-6px, 0, 0) rotate(-2deg); }
-  40%, 60% { transform: translate3d(6px, 0, 0) rotate(2deg); }
+.rip-art {
+  position: absolute;
+  left: -50%;
+  top: -7.47%;
+  width: 200%;
+  height: 114.94%;
 }
-.rip-exit {
-  animation: rip-exit 600ms var(--ease-in-out) both;
+
+/* Pack: floats, tilts toward the pointer, shakes harder the further it tears */
+.rip-pack {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  filter: drop-shadow(0 40px 40px rgba(0, 0, 0, 0.7));
 }
-@keyframes rip-exit {
-  to { opacity: 0; transform: translateY(40%) scale(0.85); filter: blur(4px); }
+.rip-stage.is-ready .rip-pack {
+  animation: rip-float 5s var(--ease-in-out) infinite;
 }
-.rip-burst {
-  animation: rip-burst 900ms var(--ease-out) both;
+@keyframes rip-float {
+  50% { transform: translateY(-10px); }
 }
-@keyframes rip-burst {
-  0% { opacity: 0; transform: scale(0.2); }
-  30% { opacity: 1; }
-  100% { opacity: 0; transform: scale(1.8); }
+.rip-pack-tilt {
+  position: absolute;
+  inset: 0;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 500ms var(--ease-out);
 }
-.card-rise {
-  animation: card-rise 800ms cubic-bezier(0.34, 1.3, 0.64, 1) both;
+.rip-stage.is-tearing .rip-pack-tilt {
+  transition: transform 120ms linear;
+  animation: rip-strain 90ms linear infinite;
 }
-@keyframes card-rise {
-  from { opacity: 0; transform: translateY(60%) scale(0.8); }
+@keyframes rip-strain {
+  25% { translate: calc(var(--p) * -2.5px) calc(var(--p) * 1px); rotate: calc(var(--p) * -0.6deg); }
+  75% { translate: calc(var(--p) * 2.5px) calc(var(--p) * -1px); rotate: calc(var(--p) * 0.6deg); }
 }
+
+/* Holographic foil that follows the pointer */
+.rip-foil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 32%, rgba(255, 255, 255, 0.5) 44%, rgba(117, 251, 181, 0.3) 50%, rgba(160, 140, 255, 0.22) 55%, transparent 66%);
+  background-size: 300% 100%;
+  background-position: calc(100% - var(--mx)) 0;
+  mix-blend-mode: overlay;
+  transition: background-position 600ms var(--ease-out);
+}
+
+/* The seal strip peels up from the left as you tear, hinged at the right */
+.rip-strip {
+  transform-origin: 100% 9%;
+  transform: rotate(calc(var(--p) * 8deg)) translateY(calc(var(--p) * -3%));
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.5));
+}
+.rip-stage.is-open .rip-strip {
+  animation: rip-strip-fly 800ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+@keyframes rip-strip-fly {
+  from { transform: rotate(8deg) translateY(-3%); opacity: 1; }
+  to { transform: translate(-70%, -260%) rotate(-38deg); opacity: 0; }
+}
+
+/* Light leaking from inside the pack */
+.rip-gap-light {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 2%;
+  height: 10%;
+  background: radial-gradient(70% 120% at 50% 100%, #fff, rgba(var(--tier), 0.9) 35%, rgba(var(--tier), 0.2) 65%, transparent 80%);
+  opacity: calc(var(--p) * 1.4);
+}
+.rip-tear-line {
+  position: absolute;
+  left: 0;
+  top: 9%;
+  width: calc(var(--p) * 100%);
+  height: 2px;
+  margin-top: -1px;
+  z-index: 3;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), #fff);
+  box-shadow: 0 0 10px 2px rgba(117, 251, 181, 0.8), 0 0 24px 6px rgba(117, 251, 181, 0.35);
+  opacity: calc(var(--p) * 30);
+}
+.rip-tear-line::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  width: 20px;
+  height: 22px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #fff 0 18%, rgba(117, 251, 181, 0.7) 35%, transparent 70%);
+}
+.rip-stage.is-open .rip-tear-line {
+  animation: rip-fade 300ms ease forwards;
+}
+
+/* "Swipe here" guide along the seal */
+.rip-guide {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 9%;
+  z-index: 3;
+  height: 0;
+  border-top: 2px dashed rgba(255, 255, 255, 0.55);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+  animation: rip-fade-in 500ms ease 600ms both;
+}
+.rip-guide > span {
+  position: absolute;
+  top: -8px;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(117, 251, 181, 0.35), 0 0 16px 4px rgba(117, 251, 181, 0.7);
+  animation: rip-guide 1.8s var(--ease-in-out) infinite;
+}
+@keyframes rip-guide {
+  0% { left: 0; opacity: 0; transform: scale(0.6); }
+  15% { opacity: 1; transform: scale(1); }
+  75% { left: calc(100% - 14px); opacity: 1; }
+  100% { left: calc(100% - 14px); opacity: 0; transform: scale(0.6); }
+}
+@keyframes rip-fade-in {
+  from { opacity: 0; }
+}
+@keyframes rip-fade {
+  to { opacity: 0; }
+}
+
+/* Opening: beams burst from the mouth of the pack, the pack shudders and
+   drops away while the card climbs out and settles in front */
+.rip-stage.is-open .rip-pack {
+  animation: rip-pack-drop 2300ms cubic-bezier(0.5, 0, 0.75, 0) forwards;
+  pointer-events: none;
+}
+@keyframes rip-pack-drop {
+  0% { transform: none; }
+  8% { transform: translateY(-2%) scale(1.02); }
+  14%, 58% { transform: none; }
+  20%, 32%, 44% { transform: translateX(-1.5%) rotate(-1deg); }
+  26%, 38%, 50% { transform: translateX(1.5%) rotate(1deg); }
+  86%, 100% { transform: translateY(115%) rotate(7deg); opacity: 0; }
+}
+.rip-beams {
+  position: absolute;
+  left: 50%;
+  top: 9%;
+  width: 300%;
+  aspect-ratio: 1;
+  z-index: 0;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  mask: radial-gradient(circle, #000 8%, rgba(0, 0, 0, 0.5) 30%, transparent 62%);
+  -webkit-mask: radial-gradient(circle, #000 8%, rgba(0, 0, 0, 0.5) 30%, transparent 62%);
+}
+.rip-beams::before,
+.rip-beams::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: repeating-conic-gradient(from 0deg, rgba(var(--tier), 0.55) 0deg 5deg, transparent 5deg 18deg);
+  animation: rip-spin 26s linear infinite;
+}
+.rip-beams::after {
+  background: repeating-conic-gradient(from 9deg, rgba(255, 255, 255, 0.35) 0deg 2deg, transparent 2deg 26deg);
+  animation-duration: 40s;
+  animation-direction: reverse;
+}
+.rip-stage.is-open .rip-beams {
+  animation: rip-beams 2300ms var(--ease-out) forwards;
+}
+@keyframes rip-beams {
+  0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+  12% { transform: translate(-50%, -50%) scale(0.75); opacity: 1; }
+  58% { transform: translate(-50%, -50%) scale(0.95); opacity: 1; top: 9%; }
+  100% { transform: translate(-50%, -50%) scale(calc(0.8 + var(--strength) * 0.4)); opacity: calc(0.35 + var(--strength) * 0.5); top: 45%; }
+}
+@keyframes rip-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Card waits inside the pack (hidden behind the body) */
+.rip-card-slot {
+  position: absolute;
+  left: 11%;
+  width: 78%;
+  top: 14%;
+  aspect-ratio: 147 / 250;
+  z-index: 1;
+  opacity: 0;
+}
+.rip-stage.is-open .rip-card-slot {
+  opacity: 1;
+  animation: rip-card-out 2300ms forwards;
+}
+@keyframes rip-card-out {
+  0%, 14% { transform: translateY(0); animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1); }
+  48% { transform: translateY(-47%) scale(1.02); }
+  60% { transform: translateY(-45%) scale(1.02); animation-timing-function: cubic-bezier(0.34, 1.3, 0.64, 1); }
+  100% { transform: translateY(-4%) scale(1.15); z-index: 3; }
+}
+.rip-stage.is-open .rip-card-slot { z-index: 1; }
+.rip-stage.is-reveal .rip-card-slot { z-index: 3; }
+.rip-card-tilt {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--crx, 0deg)) rotateY(var(--cry, 0deg));
+  transition: transform 500ms var(--ease-out);
+}
+.rip-card-back {
+  border: 1px solid rgba(var(--tier), 0.55);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.9), 0 0 calc(20px + var(--strength) * 40px) rgba(var(--tier), calc(var(--strength) * 0.6));
+}
+.rip-stage.is-reveal .rip-card-back {
+  animation: rip-back-pulse 1.4s var(--ease-in-out) infinite;
+}
+@keyframes rip-back-pulse {
+  50% { box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.9), 0 0 calc(30px + var(--strength) * 60px) rgba(var(--tier), calc(var(--strength) * 0.85)); }
+}
+.rip-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  pointer-events: none;
+  background:
+    linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.55) 48%, transparent 60%) 120% 0 / 300% 100% no-repeat,
+    radial-gradient(circle at var(--gx, 50%) var(--gy, 40%), rgba(255, 255, 255, 0.28), transparent 45%);
+  mix-blend-mode: soft-light;
+  animation: rip-shine 1100ms var(--ease-out) 450ms both;
+}
+@keyframes rip-shine {
+  from { background-position: 120% 0, 0 0; }
+  to { background-position: -40% 0, 0 0; }
+}
+
+/* Flip impact: shockwave ring, screen flash, quake for grails */
+.rip-shock {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  aspect-ratio: 1;
+  margin: -50% 0 0 -50%;
+  border-radius: 9999px;
+  border: 3px solid rgba(var(--tier), 0.9);
+  box-shadow: 0 0 30px rgba(var(--tier), 0.7), inset 0 0 30px rgba(var(--tier), 0.5);
+  pointer-events: none;
+  animation: rip-shock 900ms var(--ease-out) forwards;
+}
+@keyframes rip-shock {
+  from { transform: scale(0.3); opacity: 1; }
+  to { transform: scale(calc(2 + var(--strength) * 2.5)); opacity: 0; border-width: 1px; }
+}
+.rip-flash {
+  background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, var(--flash)), rgba(var(--tier), calc(var(--flash) * 0.6)) 30%, transparent 75%);
+  animation: rip-flash 1000ms var(--ease-out) forwards;
+}
+@keyframes rip-flash {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.rip-stage.is-quake {
+  animation: rip-quake 650ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+@keyframes rip-quake {
+  10%, 90% { transform: translate3d(-2px, 1px, 0); }
+  20%, 80% { transform: translate3d(5px, -2px, 0); }
+  30%, 50%, 70% { transform: translate3d(-8px, 2px, 0); }
+  40%, 60% { transform: translate3d(8px, -1px, 0); }
+}
+
 .card-flip {
   transform-style: preserve-3d;
   transition: transform 900ms cubic-bezier(0.34, 1.2, 0.64, 1);
@@ -933,31 +1200,13 @@
 }
 @keyframes card-hint {
   0%, 100% { transform: rotateY(0deg) translateY(0); }
-  50% { transform: rotateY(-10deg) translateY(-6px); }
+  50% { transform: rotateY(-12deg) translateY(-6px); }
 }
 .reveal-in {
-  animation: reveal-in 600ms var(--ease-out) 650ms both;
+  animation: reveal-in 600ms var(--ease-out) 500ms both;
 }
 @keyframes reveal-in {
   from { opacity: 0; transform: translateY(14px); }
-}
-/* Grail particles */
-.spark-ring > span {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 6px;
-  height: 6px;
-  margin: -3px;
-  border-radius: 9999px;
-  background: var(--accent);
-  box-shadow: 0 0 12px var(--accent);
-  opacity: 0;
-  animation: spark 1100ms var(--ease-out) 700ms both;
-}
-@keyframes spark {
-  0% { opacity: 1; transform: rotate(var(--a)) translateX(0) scale(1); }
-  100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d, 180px)) scale(0.3); }
 }
 
 /* ------------------------------------------------------------------
