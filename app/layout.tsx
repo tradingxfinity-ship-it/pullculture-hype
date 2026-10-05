@@ -15,7 +15,7 @@ const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono", display: 
 const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["italic", "normal"], variable: "--font-serif", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Pull Culture — Rip packs. Pull grails.", template: "%s — Pull Culture" },
+  title: { default: "HYP3 — Rip packs. Pull grails.", template: "%s — HYP3" },
   description:
     "Curated packs of graded sports and Pokémon cards. Provably fair odds, instant buyback, and a marketplace for the cards you actually want.",
 };

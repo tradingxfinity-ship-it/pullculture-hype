@@ -59,7 +59,7 @@ export default function TopBar() {
           {/* Desktop breadcrumb */}
           <nav aria-label="Breadcrumb" className="hidden min-w-0 items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] lg:flex">
             <Link href="/" className="text-fg-dim transition-colors hover:text-fg">
-              Pull Culture
+              HYP3
             </Link>
             {crumbs.map((c, i) => (
               <span key={i} className="flex min-w-0 items-center gap-2">

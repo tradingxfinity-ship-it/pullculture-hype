@@ -121,7 +121,7 @@ export default function Footer() {
       <div className="relative select-none overflow-hidden" aria-hidden>
         <div className="frame">
           <p className="masthead translate-y-[14%] text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.16)]">
-            Pull <span className="[-webkit-text-stroke:1px_rgba(117,251,181,0.55)]">Culture</span>
+            HYP<span className="[-webkit-text-stroke:1px_rgba(117,251,181,0.55)]">3</span>
           </p>
         </div>
       </div>

@@ -262,9 +262,9 @@
     pointer-events: none;
   }
 
-  /* "PULL CULTURE" set edge-to-edge in the content column (text ≈ 6.65em wide) */
+  /* "HYP3" set edge-to-edge in the content column (text ≈ 2.46em wide) */
   .masthead {
-    font-size: calc((100vw - var(--rail-w) - 2 * var(--gutter) - 12px) / 6.72);
+    font-size: calc((100vw - var(--rail-w) - 2 * var(--gutter) - 12px) / 2.5);
     font-weight: 900;
     line-height: 0.8;
     letter-spacing: -0.065em;
