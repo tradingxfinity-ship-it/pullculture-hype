@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { Heart, LayoutDashboard, Package, Settings, Tag as TagIcon, Vault, Wallet } from "lucide-react";
+import { Eye, Heart, LayoutDashboard, Package, Settings, Tag as TagIcon, Vault, Wallet } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Tag from "@/components/ui/Tag";
 import { useAccount, useAccountStats } from "./AccountProvider";
@@ -66,9 +66,14 @@ export default function AccountShell({ children }: { children: ReactNode }) {
                 <dd className="mt-1 font-mono text-xl tabular-nums text-fg sm:text-2xl">#{num(state.rank)}</dd>
               </div>
             </dl>
-            <Button href="/account/wallet" variant="secondary" size="sm">
-              <Wallet className="h-4 w-4" /> Add funds
-            </Button>
+            <div className="flex gap-2">
+              <Button href={`/u/${state.user.handle}`} variant="secondary" size="sm">
+                <Eye className="h-4 w-4" /> View profile
+              </Button>
+              <Button href="/account/wallet" variant="secondary" size="sm">
+                <Wallet className="h-4 w-4" /> Add funds
+              </Button>
+            </div>
           </div>
         </div>
       </header>

@@ -51,11 +51,40 @@ export type Offer = {
 
 export type Address = { id: string; label: string; name: string; line1: string; city: string; region: string; postal: string; country: "US" | "CA"; isDefault: boolean };
 
-export type NotificationPrefs = { drops: boolean; offers: boolean; shipping: boolean; newsletter: boolean };
+export type NotificationPrefs = {
+  packDrops: boolean;
+  newFeatures: boolean;
+  marketplace: boolean;
+  productUpdates: boolean;
+  newAuction: boolean;
+  auctionLost: boolean;
+  extendedBidding: boolean;
+  outbid: boolean;
+};
+
+export type Socials = { instagram: string; x: string; tiktok: string };
+
+/** What other collectors see on /u/[handle] */
+export type PublicProfile = { showcase: string[]; showCollection: boolean; showValue: boolean };
+
+export type User = {
+  name: string;
+  handle: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  avatar: string;
+  cover: string;
+  joined: string;
+  bio: string;
+  socials: Socials;
+};
 
 export type AccountState = {
   version: number;
-  user: { name: string; handle: string; email: string; avatar: string; joined: string; bio: string };
+  user: User;
+  profile: PublicProfile;
   balance: number;
   points: number;
   rank: number;
@@ -75,16 +104,24 @@ const SLAB_LEBRON = "/assets/cards/Pack-03.webp";
 
 const hoursFromNow = (h: number) => new Date(Date.now() + h * 3_600_000).toISOString();
 
+export const ACCOUNT_VERSION = 2;
+
 export const seedAccount = (): AccountState => ({
-  version: 1,
+  version: ACCOUNT_VERSION,
   user: {
     name: "Steezy",
     handle: "steezy",
     email: "steezy@example.com",
+    firstName: "",
+    lastName: "",
+    phone: "",
     avatar: "/assets/users/user-01.webp",
+    cover: "/assets/banners/hero-banner.webp",
     joined: "2025-03-14",
     bio: "Chasing grails since the Base Set days.",
+    socials: { instagram: "", x: "", tiktok: "" },
   },
+  profile: { showcase: ["v1", "v3", "v2"], showCollection: true, showValue: false },
   balance: 1250,
   points: me.points,
   rank: me.rank,
@@ -122,7 +159,16 @@ export const seedAccount = (): AccountState => ({
   ],
   favorites: { packs: ["Pokémon Platinum Pack", "Basketball Gold Pack"], listings: ["gardevoir-0", "gardevoir-3"] },
   addresses: [{ id: "a1", label: "Home", name: "Steezy", line1: "123 Market St", city: "Austin", region: "TX", postal: "78701", country: "US", isDefault: true }],
-  notifications: { drops: true, offers: true, shipping: true, newsletter: false },
+  notifications: {
+    packDrops: true,
+    newFeatures: true,
+    marketplace: true,
+    productUpdates: false,
+    newAuction: true,
+    auctionLost: true,
+    extendedBidding: true,
+    outbid: true,
+  },
   twoFactor: false,
 });
 
@@ -132,6 +178,22 @@ export const orderSteps: { key: OrderStatus; label: string }[] = [
   { key: "shipped", label: "Shipped" },
   { key: "delivered", label: "Delivered" },
 ];
+
+/** Bring demo state saved by an older version forward instead of discarding it. */
+export function migrateAccount(saved: Partial<AccountState> & { version?: number }): AccountState | null {
+  const seed = seedAccount();
+  if (!saved || typeof saved !== "object") return null;
+  if (saved.version === ACCOUNT_VERSION) return saved as AccountState;
+  if (saved.version !== 1) return null;
+  return {
+    ...seed,
+    ...saved,
+    version: ACCOUNT_VERSION,
+    user: { ...seed.user, ...saved.user, socials: { ...seed.user.socials, ...saved.user?.socials } },
+    profile: seed.profile,
+    notifications: seed.notifications,
+  };
+}
 
 export const fmtDate = (iso: string) =>
   new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(iso));

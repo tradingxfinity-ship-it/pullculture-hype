@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useState, type ReactNode } from "react";
-import { seedAccount, type AccountState, type Address, type NotificationPrefs, type Order, type VaultItem } from "@/lib/account";
+import { migrateAccount, seedAccount, type AccountState, type Address, type NotificationPrefs, type Order, type PublicProfile, type VaultItem } from "@/lib/account";
 
 // Demo account state for the user area. Persists to localStorage so actions
 // (selling back, ripping packs, offers…) carry across pages and reloads.
@@ -21,6 +21,7 @@ type Action =
   | { type: "counter"; id: string; amount: number }
   | { type: "favorite"; kind: "packs" | "listings"; key: string }
   | { type: "profile"; user: Partial<AccountState["user"]> }
+  | { type: "publicProfile"; profile: Partial<PublicProfile> }
   | { type: "notify"; prefs: Partial<NotificationPrefs> }
   | { type: "twoFactor"; on: boolean }
   | { type: "address/add"; address: Address }
@@ -44,6 +45,7 @@ function reducer(s: AccountState, a: Action): AccountState {
         ...s,
         balance: s.balance + total,
         vault: s.vault.filter((v) => !sold.includes(v)),
+        profile: { ...s.profile, showcase: s.profile.showcase.filter((id) => !sold.some((v) => v.id === id)) },
         transactions: [
           { id: uid("t"), date: today(), type: "buyback", label: sold.length === 1 ? `Sold back · ${sold[0].name}` : `Sold back · ${sold.length} cards`, amount: total },
           ...s.transactions,
@@ -108,7 +110,9 @@ function reducer(s: AccountState, a: Action): AccountState {
     }
 
     case "profile":
-      return { ...s, user: { ...s.user, ...a.user } };
+      return { ...s, user: { ...s.user, ...a.user, socials: { ...s.user.socials, ...a.user.socials } } };
+    case "publicProfile":
+      return { ...s, profile: { ...s.profile, ...a.profile } };
     case "notify":
       return { ...s, notifications: { ...s.notifications, ...a.prefs } };
     case "twoFactor":
@@ -140,8 +144,8 @@ export default function AccountProvider({ children }: { children: ReactNode }) {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const saved = JSON.parse(raw) as AccountState;
-        if (saved?.version === seedAccount().version) dispatch({ type: "load", state: saved });
+        const saved = migrateAccount(JSON.parse(raw));
+        if (saved) dispatch({ type: "load", state: saved });
       }
     } catch {}
     setHydrated(true);
@@ -151,7 +155,9 @@ export default function AccountProvider({ children }: { children: ReactNode }) {
     if (!hydrated) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch {}
+    } catch {
+      // Storage full (large uploaded photos): keep working in memory.
+    }
   }, [state, hydrated]);
 
   const value = useMemo(() => ({ state, dispatch, hydrated }), [state, hydrated]);

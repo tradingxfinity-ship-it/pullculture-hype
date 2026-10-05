@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight, Instagram } from "lucide-react";
+import { DiscordIcon, TikTokIcon, XIcon } from "@/components/ui/SocialIcons";
 import Reveal from "@/components/ui/Reveal";
 import SplitHeading from "@/components/ui/SplitHeading";
 import Logo from "@/components/ui/Logo";
@@ -8,21 +9,6 @@ import Newsletter from "./Newsletter";
 import Wordmark from "./Wordmark";
 import { footerNav, socials } from "@/lib/nav";
 
-const XIcon = (p: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" {...p} aria-hidden>
-    <path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.77L17.75 3Zm-1.08 16.2h1.7L7.4 4.72H5.57L16.67 19.2Z" />
-  </svg>
-);
-const TikTokIcon = (p: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" {...p} aria-hidden>
-    <path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 1 1-2.59-2.63c.27 0 .53.04.78.12V9.73a5.73 5.73 0 0 0-.78-.05A5.69 5.69 0 1 0 15.54 15.4V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3a4.3 4.3 0 0 1-3.24-1.48Z" />
-  </svg>
-);
-const DiscordIcon = (p: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" {...p} aria-hidden>
-    <path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.44.87-.6 1.25a18.27 18.27 0 0 0-5.49 0 12.6 12.6 0 0 0-.62-1.25.08.08 0 0 0-.08-.04 19.74 19.74 0 0 0-4.88 1.52.07.07 0 0 0-.03.03C.53 9.05-.32 13.58.1 18.06c0 .02.01.04.03.06a19.9 19.9 0 0 0 5.99 3.03.08.08 0 0 0 .09-.03c.46-.63.87-1.3 1.22-1.99a.08.08 0 0 0-.04-.11 13.1 13.1 0 0 1-1.87-.89.08.08 0 0 1-.01-.13c.13-.09.25-.19.37-.29a.07.07 0 0 1 .08-.01c3.93 1.79 8.18 1.79 12.06 0a.07.07 0 0 1 .08.01c.12.1.25.2.37.29a.08.08 0 0 1-.01.13c-.6.35-1.22.64-1.87.89a.08.08 0 0 0-.04.11c.36.7.77 1.36 1.22 1.99a.08.08 0 0 0 .09.03 19.84 19.84 0 0 0 6-3.03.08.08 0 0 0 .03-.06c.5-5.18-.84-9.67-3.55-13.66a.06.06 0 0 0-.03-.03ZM8.02 15.33c-1.18 0-2.16-1.09-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.33-.96 2.42-2.16 2.42Zm7.97 0c-1.18 0-2.15-1.09-2.15-2.42 0-1.33.95-2.42 2.15-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.33-.95 2.42-2.16 2.42Z" />
-  </svg>
-);
 const socialIcon = { Instagram: Instagram, X: XIcon, TikTok: TikTokIcon, Discord: DiscordIcon } as const;
 
 const columns = [
