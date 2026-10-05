@@ -3,12 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { EyeOff, Instagram, Pencil, Share2, Sparkles, UserRoundX } from "lucide-react";
+import { EyeOff, Instagram, Pencil, Share2, UserRoundX } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { TikTokIcon, XIcon } from "@/components/ui/SocialIcons";
 import { useToast } from "@/components/ui/Toast";
 import { useAccount } from "./AccountProvider";
 import { StatusChip } from "./AccountShell";
+import Showcase from "./Showcase";
 import { fmtDate, type VaultItem } from "@/lib/account";
 import { num, usd } from "@/lib/data";
 
@@ -189,29 +190,9 @@ export default function PublicProfile({ handle }: { handle: string }) {
 
       {/* Showcase */}
       {showcase.length > 0 && (
-        <section className="frame mt-12 md:mt-16">
-          <div className="relative overflow-hidden rounded-lg border border-line bg-ink-1 px-5 py-8 md:px-10 md:py-10">
-            <div className="glow absolute -top-32 left-1/2 h-[360px] w-[720px] -translate-x-1/2" aria-hidden />
-            <p className="relative eyebrow flex items-center gap-2 text-accent">
-              <Sparkles className="h-3.5 w-3.5" /> Showcase
-            </p>
-            <ul className="relative mt-8 grid grid-cols-2 gap-6 md:grid-cols-4">
-              {showcase.map((v, i) => (
-                <li key={v.id} className="group text-center">
-                  <div className="relative mx-auto aspect-[147/250] w-full max-w-[200px] transition-transform duration-slow ease-out group-hover:-translate-y-2 group-hover:rotate-[-1.5deg]">
-                    <Image src={v.image} alt="" fill sizes="200px" className="object-contain drop-shadow-[0_24px_30px_rgba(0,0,0,0.75)]" />
-                  </div>
-                  <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.14em] text-accent">0{i + 1}</p>
-                  <p className="mt-1 truncate font-semibold text-fg">{v.name}</p>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-fg-dim">
-                    {v.grade}
-                    {profile.showValue && <> · {usd(v.value)}</>}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
+        <div className="frame mt-12 md:mt-16">
+          <Showcase cards={showcase} showValue={profile.showValue} />
+        </div>
       )}
 
       {/* Tabs */}
