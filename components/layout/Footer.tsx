@@ -5,6 +5,7 @@ import SplitHeading from "@/components/ui/SplitHeading";
 import Logo from "@/components/ui/Logo";
 import { LiveDot } from "@/components/ui/Tag";
 import Newsletter from "./Newsletter";
+import Wordmark from "./Wordmark";
 import { footerNav, socials } from "@/lib/nav";
 
 const XIcon = (p: { className?: string }) => (
@@ -118,11 +119,11 @@ export default function Footer() {
       </div>
 
       {/* Oversized wordmark */}
-      <div className="relative select-none overflow-hidden" aria-hidden>
+      <div className="relative select-none overflow-hidden">
         <div className="frame">
-          <p className="masthead translate-y-[14%] text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.16)]">
-            HYP<span className="[-webkit-text-stroke:1px_rgba(117,251,181,0.55)]">3</span>
-          </p>
+          <div className="pb-10 pt-4 md:pb-14">
+            <Wordmark />
+          </div>
         </div>
       </div>
 

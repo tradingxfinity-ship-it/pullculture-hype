@@ -262,16 +262,6 @@
     pointer-events: none;
   }
 
-  /* "HYP3" set edge-to-edge in the content column (text ≈ 2.46em wide) */
-  .masthead {
-    font-size: calc((100vw - var(--rail-w) - 2 * var(--gutter) - 12px) / 2.5);
-    font-weight: 900;
-    line-height: 0.8;
-    letter-spacing: -0.065em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
   .text-outline {
     color: transparent;
     -webkit-text-stroke: 1px var(--line-strong);
@@ -1207,6 +1197,65 @@
 }
 @keyframes reveal-in {
   from { opacity: 0; transform: translateY(14px); }
+}
+
+/* ------------------------------------------------------------------
+   Footer wordmark (components/layout/Wordmark.tsx)
+   ------------------------------------------------------------------ */
+.wordmark {
+  --spot: 0;
+  overflow: visible;
+  transition: opacity 400ms ease;
+}
+.wm-base {
+  fill: rgba(117, 251, 181, 0);
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-dasharray: var(--dash);
+  stroke-dashoffset: var(--dash);
+  pointer-events: visible;
+  transition:
+    stroke-dashoffset 2.6s cubic-bezier(0.55, 0.1, 0.25, 1) calc(var(--i) * 220ms),
+    fill 500ms var(--ease-out),
+    stroke 500ms var(--ease-out);
+}
+.wm-base.is-accent {
+  stroke: rgba(117, 251, 181, 0.6);
+}
+.is-in .wm-base {
+  stroke-dashoffset: 0;
+}
+.wm-base:hover {
+  fill: rgba(117, 251, 181, 0.07);
+  stroke: rgba(117, 251, 181, 0.75);
+}
+.wm-layer {
+  pointer-events: none;
+}
+/* A short dash of light travelling round each glyph, offset per letter */
+.wm-comet {
+  fill: none;
+  stroke: #75fbb5;
+  stroke-linecap: round;
+  stroke-dasharray: 70 calc(var(--dash) - 70);
+  opacity: 0;
+  filter: drop-shadow(0 0 6px rgba(117, 251, 181, 0.9));
+}
+.is-in .wm-comet {
+  opacity: 1;
+  transition: opacity 800ms ease 2.4s;
+  animation: wm-comet 7s linear calc(var(--i) * -1.75s) infinite;
+}
+@keyframes wm-comet {
+  from { stroke-dashoffset: var(--dash); }
+  to { stroke-dashoffset: 0; }
+}
+.wm-spot {
+  opacity: var(--spot);
+  transition: opacity 400ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wm-base { stroke-dasharray: none; }
+  .wm-comet { display: none; }
 }
 
 /* ------------------------------------------------------------------
