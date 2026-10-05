@@ -221,37 +221,6 @@ export const ranking = [
 
 export const me = { points: 12425, rank: 1401, today: 2510 };
 
-/* ---------------------------------- News ---------------------------------- */
-
-export type Article = { title: string; category: string; date: string; read: string; image: string };
-
-export const featuredArticle: Article = {
-  title: "10 Best Pikachu Pokémon Cards You Need to Collect",
-  category: "Pokémon",
-  date: "October 10, 2025",
-  read: "10 min Read",
-  image: "/assets/news/news-01.webp",
-};
-
-const rows: [string, string, string][] = [
-  ["11 Best Pikachu Pokémon Cards You Need to Collect", "Pokémon", "/assets/news/news-02.webp"],
-  ["The King of Collectibles Shares the Secrets to Building the Ultimate Collection", "Sports", "/assets/news/news-03.webp"],
-  ["Best Star Wars Trading Card Sets to Celebrate Lucasfilm's 50th Anniversary", "Trading Cards", "/assets/news/news-04.webp"],
-  ["12 Best Pikachu Pokémon Cards You Need to Collect", "Pokémon", "/assets/news/news-02.webp"],
-  ["The Queen of Collectibles Shares the Secrets to Building the Ultimate Collection", "Sports", "/assets/news/news-03.webp"],
-  ["Best of Star Wars Trading Card Sets to Celebrate Lucasfilm's 50th Anniversary", "Trading Cards", "/assets/news/news-04.webp"],
-  ["16 Best Pikachu Pokémon Cards You Need to Collect", "Pokémon", "/assets/news/news-02.webp"],
-  ["The Kings of Collectibles Shares the Secrets to Building the Ultimate Collection", "Sports", "/assets/news/news-03.webp"],
-  ["Best Star Wars Trading Cards Sets to Celebrate Lucasfilm's 50th Anniversary", "Trading Cards", "/assets/news/news-04.webp"],
-];
-export const articles: Article[] = rows.map(([title, category, image]) => ({
-  title,
-  category,
-  image,
-  date: "October 10, 2025",
-  read: "10 min Read",
-}));
-
 /* ---------------------------------- How it works ---------------------------------- */
 
 export const steps = [

@@ -7,6 +7,7 @@ export const primaryNav = [
   { label: "Pack", href: "/pack", icon: "package" },
   { label: "Marketplace", href: "/marketplace", icon: "store" },
   { label: "Leaderboard", href: "/leaderboard", icon: "trophy" },
+  { label: "Blog", href: "/blog", icon: "book" },
 ] as const;
 
 export const categoryNav = [
@@ -20,7 +21,7 @@ export const categoryNav = [
 export const footerNav = [
   { label: "Home", href: "/" },
   { label: "Packs", href: "/pack" },
-  { label: "News", href: "/news" },
+  { label: "Blog", href: "/blog" },
   { label: "FAQ", href: "/how-it-works#faq" },
   { label: "Support", href: "#" },
   { label: "Feedback", href: "#" },
