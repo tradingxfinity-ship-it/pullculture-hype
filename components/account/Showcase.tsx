@@ -46,13 +46,42 @@ function Slab({ v, rank, angle, showValue }: { v: VaultItem; rank: number; angle
       <div ref={el} className="sc-slab" onPointerMove={move} onPointerLeave={leave}>
         <div className="sc-float">
           <div className="sc-tilt">
-            <Image src={v.image} alt={`${v.name}, ${v.grade}`} fill sizes={featured ? "260px" : "200px"} className="object-contain" />
-            <span className="sc-holo" aria-hidden />
-            <span className="sc-sweep" aria-hidden />
-            <span className="sc-glare" aria-hidden />
+            {featured ? (
+              // Turntable: same slab on both faces, paused while hovered
+              <div className="sc-spin">
+                <div className="sc-face">
+                  <Image src={v.image} alt={`${v.name}, ${v.grade}`} fill sizes="260px" className="object-contain" />
+                  <span className="sc-holo" aria-hidden />
+                  <span className="sc-sweep" aria-hidden />
+                  <span className="sc-glare" aria-hidden />
+                </div>
+                <div className="sc-face sc-face-back" aria-hidden>
+                  <Image src={v.image} alt="" fill sizes="260px" className="object-contain" />
+                  <span className="sc-sweep" />
+                </div>
+              </div>
+            ) : (
+              <>
+                <Image src={v.image} alt={`${v.name}, ${v.grade}`} fill sizes="200px" className="object-contain" />
+                <span className="sc-holo" aria-hidden />
+                <span className="sc-sweep" aria-hidden />
+                <span className="sc-glare" aria-hidden />
+              </>
+            )}
           </div>
           <div className="sc-reflection" aria-hidden>
-            <Image src={v.image} alt="" fill sizes="200px" className="object-contain" />
+            {featured ? (
+              <div className="sc-spin">
+                <div className="sc-face">
+                  <Image src={v.image} alt="" fill sizes="200px" className="object-contain" />
+                </div>
+                <div className="sc-face sc-face-back">
+                  <Image src={v.image} alt="" fill sizes="200px" className="object-contain" />
+                </div>
+              </div>
+            ) : (
+              <Image src={v.image} alt="" fill sizes="200px" className="object-contain" />
+            )}
           </div>
         </div>
       </div>

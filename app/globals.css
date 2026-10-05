@@ -1328,18 +1328,20 @@
   filter: none;
 }
 
-/* Spotlight cone from above; flickers on, brightens on hover */
+/* Light column from the top of the case down to the floor; flickers on,
+   brightens on hover */
 .sc-beam {
   position: absolute;
   left: 50%;
-  bottom: 30%;
-  width: 230%;
-  height: 210%;
+  bottom: -44px; /* stage bottom padding: reach the floor */
+  width: 124%;
+  height: 700%;
   translate: -50% 0;
   pointer-events: none;
-  background: linear-gradient(to bottom, rgba(190, 255, 220, 0.02), rgba(117, 251, 181, 0.13) 55%, rgba(117, 251, 181, 0.22));
-  clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
-  filter: blur(5px);
+  background: linear-gradient(90deg, transparent, rgba(117, 251, 181, 0.12) 16%, rgba(150, 255, 200, 0.2) 50%, rgba(117, 251, 181, 0.12) 84%, transparent);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), #000 70%, rgba(0, 0, 0, 0.7));
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), #000 70%, rgba(0, 0, 0, 0.7));
+  filter: blur(4px);
   opacity: 0;
   z-index: 0;
   transition: filter 400ms ease;
@@ -1348,12 +1350,12 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent, rgba(117, 251, 181, 0.18));
+  background: linear-gradient(90deg, transparent 10%, rgba(117, 251, 181, 0.16) 50%, transparent 90%);
   opacity: 0;
   transition: opacity 400ms ease;
 }
 .is-featured .sc-beam {
-  background: linear-gradient(to bottom, rgba(220, 255, 236, 0.04), rgba(117, 251, 181, 0.18) 55%, rgba(117, 251, 181, 0.3));
+  background: linear-gradient(90deg, transparent, rgba(117, 251, 181, 0.17) 16%, rgba(190, 255, 222, 0.32) 50%, rgba(117, 251, 181, 0.17) 84%, transparent);
 }
 .is-in .sc-beam {
   animation: sc-beam-on 1300ms steps(1, end) calc(var(--i) * 200ms) forwards;
@@ -1443,6 +1445,35 @@
 .sc-slab:hover .sc-glare {
   opacity: 1;
 }
+/* #1 pin: continuous turntable spin, paused while hovered */
+.is-featured .sc-tilt {
+  perspective: 1100px;
+}
+.sc-spin {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: sc-spin 9s linear infinite;
+}
+@keyframes sc-spin {
+  to { transform: rotateY(360deg); }
+}
+.sc-slab:hover .sc-spin {
+  animation-play-state: paused;
+}
+.sc-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.sc-face-back {
+  transform: rotateY(180deg);
+}
+.is-featured .sc-reflection {
+  perspective: 1100px;
+}
+
 /* Mirror on the floor (local bottom = visual top once flipped) */
 .sc-reflection {
   position: absolute;
