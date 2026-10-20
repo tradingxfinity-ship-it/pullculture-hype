@@ -38,25 +38,32 @@ export default function FeaturedAuctions() {
                 <div className="glow absolute left-1/2 top-1/2 h-3/4 w-2/3 -translate-x-1/2 -translate-y-1/2" aria-hidden />
                 {/* Slab turntable: continuous Y-axis spin, paused on hover */}
                 <div className="absolute inset-[9%] flex items-center justify-center [perspective:1400px]">
-                  <div className="relative aspect-[267/449] h-full animate-spin-y [transform-style:preserve-3d] group-hover:[animation-play-state:paused]">
-                    <div className="absolute inset-0 [backface-visibility:hidden]">
-                      <Image
-                        src={f.image}
-                        alt={`${f.player} ${f.title}`}
-                        fill
-                        sizes="(min-width:1024px) 30vw, 60vw"
-                        className="object-contain drop-shadow-[0_40px_50px_rgba(0,0,0,0.9)]"
-                      />
-                    </div>
-                    {/* Back face shows the front art for now, so the slab reads the same from both sides */}
-                    <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]" aria-hidden>
-                      <Image
-                        src={f.image}
-                        alt=""
-                        fill
-                        sizes="(min-width:1024px) 30vw, 60vw"
-                        className="object-contain drop-shadow-[0_40px_50px_rgba(0,0,0,0.9)]"
-                      />
+                  <div className="relative aspect-[267/449] h-full [container-type:size]">
+                    <div className="slab-3d absolute inset-0 animate-spin-y group-hover:[animation-play-state:paused]">
+                      <div className="slab-face">
+                        <Image
+                          src={f.image}
+                          alt={`${f.player} ${f.title}`}
+                          fill
+                          sizes="(min-width:1024px) 30vw, 60vw"
+                          className="object-contain drop-shadow-[0_40px_50px_rgba(0,0,0,0.9)]"
+                        />
+                      </div>
+                      {/* Back face shows the front art for now, so the slab reads the same from both sides */}
+                      <div className="slab-face slab-face-back" aria-hidden>
+                        <Image
+                          src={f.image}
+                          alt=""
+                          fill
+                          sizes="(min-width:1024px) 30vw, 60vw"
+                          className="object-contain drop-shadow-[0_40px_50px_rgba(0,0,0,0.9)]"
+                        />
+                      </div>
+                      {/* Acrylic case edges give the slab real thickness when it turns side-on */}
+                      <div className="slab-edge slab-edge-l" aria-hidden />
+                      <div className="slab-edge slab-edge-r" aria-hidden />
+                      <div className="slab-cap slab-cap-t" aria-hidden />
+                      <div className="slab-cap slab-cap-b" aria-hidden />
                     </div>
                   </div>
                 </div>
