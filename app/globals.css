@@ -1733,7 +1733,8 @@
 }
 
 /* Graded slab with real depth: faces sit at ±half the case thickness and
-   acrylic edges close the sides, so the slab never goes paper-thin side-on.
+   a stack of rounded acrylic layers fills the gap, so the slab never goes
+   paper-thin side-on and its edge follows the rounded corners.
    Sizes use the parent's container units (it sets container-type: size). */
 .slab-3d {
   --t: 7cqw;
@@ -1749,46 +1750,27 @@
 .slab-face-back {
   transform: rotateY(180deg) translateZ(calc(var(--t) / 2));
 }
-.slab-edge,
-.slab-cap {
+.slab-layer {
   position: absolute;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  inset: 0.4%;
+  border-radius: 4.5cqw;
+  background: linear-gradient(to bottom, #dfe2e5 0%, #aeb3b8 18%, #cfd3d6 45%, #9da2a7 75%, #d6d9dc 100%);
+  transform: translateZ(calc(var(--t) * var(--z)));
 }
-.slab-edge {
-  top: 1.5%;
-  bottom: 1.5%;
+/* Thin layers vanish exactly side-on; these strips fill that one angle and
+   stop short of the rounded corners so they never poke past the case */
+.slab-side {
+  position: absolute;
+  top: 4.5cqw;
+  bottom: 4.5cqw;
   left: 50%;
   width: var(--t);
   margin-left: calc(var(--t) / -2);
-  /* Clear acrylic: bright rims, a darker seam where the two shells meet,
-     and soft highlights running down the length */
-  background:
-    linear-gradient(to right, rgba(255, 255, 255, 0.75) 0 6%, transparent 6% 94%, rgba(255, 255, 255, 0.75) 94%),
-    linear-gradient(to right, transparent 46%, rgba(40, 44, 48, 0.55) 48% 52%, transparent 54%),
-    linear-gradient(to bottom, #e4e7ea 0%, #9ea4aa 12%, #d5d9dc 35%, #8d9399 60%, #c9cdd1 85%, #eef0f2 100%);
+  background: linear-gradient(to bottom, #aeb3b8, #cfd3d6 40%, #9da2a7 75%, #b9bdc1);
 }
-.slab-edge-l {
-  transform: rotateY(-90deg) translateZ(50cqw);
-  filter: brightness(0.7);
+.slab-side-l {
+  transform: rotateY(-90deg) translateZ(49.6cqw);
 }
-.slab-edge-r {
-  transform: rotateY(90deg) translateZ(50cqw);
-}
-.slab-cap {
-  left: 1.5%;
-  right: 1.5%;
-  top: 50%;
-  height: var(--t);
-  margin-top: calc(var(--t) / -2);
-  background:
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.7) 0 8%, transparent 8% 92%, rgba(255, 255, 255, 0.7) 92%),
-    linear-gradient(to right, #c9cdd1, #eef0f2 50%, #c9cdd1);
-}
-.slab-cap-t {
-  transform: rotateX(90deg) translateZ(50cqh);
-}
-.slab-cap-b {
-  transform: rotateX(-90deg) translateZ(50cqh);
-  filter: brightness(0.55);
+.slab-side-r {
+  transform: rotateY(90deg) translateZ(49.6cqw);
 }

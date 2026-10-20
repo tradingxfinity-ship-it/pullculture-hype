@@ -8,6 +8,8 @@ import Reveal from "@/components/ui/Reveal";
 import Tag, { LiveDot } from "@/components/ui/Tag";
 import { featuredListing as f, listings, usd } from "@/lib/data";
 
+const SLAB_LAYERS = 14;
+
 // One dominant lot (≈60%) with four supporting lots beside it.
 export default function FeaturedAuctions() {
   const side = listings.filter((l) => l.type === "auction").slice(0, 4);
@@ -59,11 +61,18 @@ export default function FeaturedAuctions() {
                           className="object-contain drop-shadow-[0_40px_50px_rgba(0,0,0,0.9)]"
                         />
                       </div>
-                      {/* Acrylic case edges give the slab real thickness when it turns side-on */}
-                      <div className="slab-edge slab-edge-l" aria-hidden />
-                      <div className="slab-edge slab-edge-r" aria-hidden />
-                      <div className="slab-cap slab-cap-t" aria-hidden />
-                      <div className="slab-cap slab-cap-b" aria-hidden />
+                      {/* Stacked rounded layers between the faces form the acrylic case, so the
+                          edge keeps the slab's rounded corners when it turns side-on */}
+                      {Array.from({ length: SLAB_LAYERS }, (_, i) => (
+                        <div
+                          key={i}
+                          className="slab-layer"
+                          style={{ "--z": (i / (SLAB_LAYERS - 1) - 0.5) * 0.96 } as React.CSSProperties}
+                          aria-hidden
+                        />
+                      ))}
+                      <div className="slab-side slab-side-l" aria-hidden />
+                      <div className="slab-side slab-side-r" aria-hidden />
                     </div>
                   </div>
                 </div>
