@@ -112,7 +112,6 @@ export const posts: Post[] = [
       { list: ["The card is a key rookie, a low-numbered parallel or an autograph.", "It looks clean under a light: sharp corners, even borders, no surface marks.", "The value gap between raw and a high grade is bigger than the grading fee plus shipping."] },
       { h: "Keep it raw if…" },
       { list: ["It's a base card from a modern set with huge print runs.", "There's visible wear that will cap the grade.", "You're keeping it for the binder, not for resale."] },
-      { p: "When you're ready, HYP3's Submit Cards flow walks you through the details graders need, including photos, cert numbers and declared value." },
     ],
   },
   {

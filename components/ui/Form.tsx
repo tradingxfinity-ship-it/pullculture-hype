@@ -3,7 +3,7 @@
 import { useState, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from "react";
 import { ChevronDown, Eye, EyeOff } from "lucide-react";
 
-// Shared form primitives (auth modal, submit cards).
+// Shared form primitives (auth modal, account settings).
 
 export const inputCls =
   "h-12 w-full rounded-sm border border-line-strong bg-ink-2 px-4 text-[15px] text-fg outline-none transition-colors placeholder:text-fg-dim hover:border-white/25 focus:border-accent";

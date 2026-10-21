@@ -9,13 +9,11 @@ import Logo from "@/components/ui/Logo";
 import { sportIcon } from "@/components/ui/SportIcons";
 import { categoryNav, isActive, primaryNav } from "@/lib/nav";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { useSubmitCards } from "@/components/submit/SubmitProvider";
 
 // Full-screen editorial menu for < lg.
 export default function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
   const auth = useAuth();
-  const submitCards = useSubmitCards();
 
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
@@ -103,16 +101,8 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
         >
           <LogIn className="h-4 w-4" /> Log in
         </Button>
-        <Button
-          variant="primary"
-          size="lg"
-          arrow
-          onClick={() => {
-            onClose();
-            submitCards.open();
-          }}
-        >
-          Submit Cards
+        <Button variant="primary" size="lg" arrow href="/pack">
+          Rip a Pack
         </Button>
       </div>
     </div>

@@ -2,7 +2,11 @@
 const nextConfig = {
   devIndicators: false,
   async redirects() {
-    return [{ source: "/news", destination: "/blog", permanent: true }];
+    return [
+      { source: "/news", destination: "/blog", permanent: true },
+      // Card submissions were retired
+      { source: "/submit", destination: "/", permanent: true },
+    ];
   },
   images: {
     formats: ["image/avif", "image/webp"],
