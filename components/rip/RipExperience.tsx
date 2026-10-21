@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Hand, RotateCcw, Sparkles, Wallet, Zap } from "lucide-react";
 import Button from "@/components/ui/Button";
+import CountUp from "@/components/ui/CountUp";
 import Logo from "@/components/ui/Logo";
 import SlabDepth from "@/components/ui/SlabDepth";
 import Tag from "@/components/ui/Tag";
@@ -26,6 +27,15 @@ const tierStyle: Record<TierName, { color: string; label: string }> = {
   Chasers: { color: "232,196,106", label: "Chaser" },
   Series: { color: "212,215,220", label: "Series" },
 };
+// The flip spins further and lands harder the rarer the pull: half a turn
+// for Series, one and a half for Chasers, two and a half for a Grail.
+// The card lands 72% of the way through (see rip-flip in globals.css).
+const flipSpec: Record<TierName, { deg: number; ms: number }> = {
+  Grail: { deg: 900, ms: 1800 },
+  Chasers: { deg: 540, ms: 1300 },
+  Series: { deg: 180, ms: 850 },
+};
+const LAND_AT = 0.72;
 const valueRange: Record<TierName, [number, number]> = { Grail: [2500, 4200], Chasers: [150, 650], Series: [20, 80] };
 const grades: Record<TierName, string[]> = { Grail: ["PSA 10"], Chasers: ["PSA 9", "PSA 10"], Series: ["Raw", "PSA 8", "PSA 9"] };
 const pick = <T,>(a: T[]) => a[Math.floor(Math.random() * a.length)];
@@ -92,6 +102,11 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
   const [tearing, setTearing] = useState(false);
   const [impact, setImpact] = useState(0);
   const [quake, setQuake] = useState(false);
+  const [landed, setLanded] = useState(false);
+  // The pull is drawn as soon as tearing starts so light leaking from the
+  // seal can hint at its tier; it is only charged and saved once opened.
+  const pending = useRef<Pull | null>(null);
+  const [teaseTier, setTeaseTier] = useState<TierName | null>(null);
   const stage = useRef<HTMLDivElement>(null);
   const cardEl = useRef<HTMLButtonElement>(null);
   const fx = useRef<FxHandle>(null);
@@ -109,10 +124,15 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
   const current = pulls[index];
   const canAfford = state.balance >= pack.price;
   const ready = phase === "ready" && hydrated && canAfford;
-  const tierRgb = current && phase !== "ready" ? tierStyle[current.tier].color : "117,251,181";
+  const tierRgb = current && phase !== "ready" ? tierStyle[current.tier].color : teaseTier ? tierStyle[teaseTier].color : "117,251,181";
   const setVar = (k: string, v: string) => stage.current?.style.setProperty(k, v);
 
   // --- Tear -------------------------------------------------------------
+  const drawPending = () => {
+    if (!pending.current) pending.current = drawPull(pack);
+    setTeaseTier(pending.current.tier);
+  };
+
   const setProgress = (p: number) => {
     const t = tear.current;
     t.p = Math.max(0, Math.min(1, p));
@@ -149,7 +169,8 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
     setProgress(1);
     setTearing(false);
 
-    const pull = drawPull(pack);
+    const pull = pending.current ?? drawPull(pack);
+    pending.current = null;
     dispatch({ type: "rip", pack: pack.name, price: pack.price, items: [pull] });
     setPulls((ps) => [...ps.slice(0, index), pull]);
     setFlipped(false);
@@ -166,6 +187,7 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
 
   const autoTear = () => {
     if (!ready || tearing) return;
+    drawPending();
     setTearing(true);
     animateTo(1, 750, open);
   };
@@ -177,6 +199,7 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
     t.active = true;
     t.lastX = e.clientX;
     e.currentTarget.setPointerCapture(e.pointerId);
+    drawPending();
     setTearing(true);
   };
 
@@ -217,12 +240,26 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
   };
 
   // --- Reveal -----------------------------------------------------------
+  // While the card waits face-down, embers in its tier colour drift up
+  // around it; rarer pulls throw off more of them.
+  useEffect(() => {
+    if (phase !== "reveal" || flipped || !current) return;
+    const col = `rgb(${tierStyle[current.tier].color})`;
+    const n = current.tier === "Grail" ? 5 : current.tier === "Chasers" ? 3 : 1;
+    const id = setInterval(() => {
+      fx.current?.burstAt(cardEl.current, 0.1 + Math.random() * 0.8, 0.85, { count: n, kind: "spark", colors: [col, col, "#ffffff"], angle: -Math.PI / 2, spread: 0.7, speed: [90, 230], gravity: -80, size: [1.6, 3.2], life: [0.8, 1.6] });
+    }, 220);
+    return () => clearInterval(id);
+  }, [phase, flipped, current]);
+
   const flip = () => {
     if (phase !== "reveal" || flipped || !current) return;
     setFlipped(true);
     const tier = current.tier;
     const col = `rgb(${tierStyle[tier].color})`;
-    later(330, () => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    later(reduced ? 0 : flipSpec[tier].ms * LAND_AT, () => {
+      setLanded(true);
       setImpact((n) => n + 1);
       const el = cardEl.current;
       const at = (o: BurstOpts) => fx.current?.burstAt(el, 0.5, 0.45, { spread: Math.PI * 2, ...o });
@@ -233,6 +270,12 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
         at({ count: 150, colors: ["#75FBB5", "#ffffff", "#b9ffd9", "#2fd98a", "#e8c46a"], speed: [320, 1100], gravity: 650, life: [1.5, 2.8] });
         at({ count: 70, kind: "spark", colors: ["#ffffff", col], speed: [420, 1300], gravity: 150, size: [1.5, 3.5], life: [0.5, 1.2] });
         later(450, () => at({ count: 60, colors: ["#75FBB5", "#ffffff", "#2fd98a"], angle: -Math.PI / 2, spread: 1.4, speed: [500, 900], gravity: 700, life: [1.6, 2.6] }));
+        // confetti keeps raining over the stage for a couple of seconds
+        const w = stage.current?.closest("section")?.clientWidth ?? 600;
+        for (let i = 0; i < 6; i++)
+          later(300 + i * 320, () =>
+            fx.current?.burstAt(stage.current?.closest("section") ?? null, 0.5, 0, { count: 26, colors: ["#75FBB5", "#ffffff", "#e8c46a", "#2fd98a"], width: w, angle: Math.PI / 2, spread: 0.6, speed: [60, 220], gravity: 320, life: [2.2, 3.4] }),
+          );
       } else if (tier === "Chasers") {
         navigator.vibrate?.([20, 50, 30]);
         at({ count: 80, colors: ["#e8c46a", "#fff0b8", "#c9952d", "#ffffff"], speed: [260, 820], gravity: 750, life: [1.2, 2.2] });
@@ -249,7 +292,9 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
     tear.current = { p: 0, lastX: 0, step: 0, raf: 0, active: false };
     setTearing(false);
     setFlipped(false);
+    setLanded(false);
     setImpact(0);
+    setTeaseTier(null);
   };
 
   const next = () => {
@@ -282,6 +327,8 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
         aria-hidden
       />
       <div className="grid-bg pointer-events-none absolute inset-0 opacity-40" aria-hidden />
+      {/* Lights down once the pack opens, so the card is the only thing lit */}
+      <div className={`rip-dim ${opened ? "is-on" : ""}`} aria-hidden />
       <FxCanvas ref={fx} />
       {impact > 0 && (
         <div key={impact} className="rip-flash pointer-events-none absolute inset-0 z-40" style={{ "--tier": tierRgb, "--flash": strength * 0.85 } as React.CSSProperties} aria-hidden />
@@ -333,9 +380,11 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
                     aria-hidden={phase !== "reveal"}
                     aria-label={flipped && current ? `${current.name}, ${current.grade}` : "Flip card to reveal"}
                     className={`card-flip slab-3d relative block h-full w-full ${flipped ? "is-flipped" : ""} ${phase === "reveal" && !flipped ? "card-hint cursor-pointer" : ""}`}
+                    style={current ? ({ "--flip-deg": `${flipSpec[current.tier].deg}deg`, "--flip-ms": `${flipSpec[current.tier].ms}ms` } as React.CSSProperties) : undefined}
                   >
                     <span className="slab-face rip-card-back card-back-pattern grid place-items-center overflow-hidden rounded-[4.5cqw]">
-                      <span className="flex flex-col items-center gap-4">
+                      <span className="rip-back-sheen" aria-hidden />
+                      <span className="relative flex flex-col items-center gap-4">
                         <Logo link={false} className="h-7 w-auto" />
                         <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">Tap to reveal</span>
                       </span>
@@ -354,6 +403,9 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
                   <div className="rip-gap-light" />
                   <PackArt src={pack.image} clip={BODY_CLIP} />
                   <PackArt src={pack.image} clip={STRIP_CLIP} className="rip-strip" />
+                  <svg className="rip-fiber" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+                    <polyline points={teeth.map(([x, y]) => `${x},${y}`).join(" ")} />
+                  </svg>
                   <div className="rip-tear-line" />
                   {ready && !tearing && (
                     <div className="rip-guide">
@@ -408,22 +460,33 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
                 <p className="reveal-in mt-6 animate-pulse font-mono text-[11px] uppercase tracking-[0.16em] text-fg-muted">Tap the card to flip it</p>
               )}
 
-              {phase === "reveal" && current && flipped && (
-                <div className="reveal-in">
-                  <span className="inline-flex h-7 items-center gap-1.5 rounded-[6px] px-2.5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-black" style={{ background: `rgb(${tierStyle[current.tier].color})` }}>
+              {phase === "reveal" && current && flipped && landed && (
+                <div>
+                  <span
+                    className="rip-slam inline-flex h-8 items-center gap-1.5 rounded-[6px] px-3 font-mono text-[12px] font-semibold uppercase tracking-[0.16em] text-black"
+                    style={{ background: `rgb(${tierStyle[current.tier].color})`, boxShadow: `0 0 ${18 + strength * 30}px rgba(${tierStyle[current.tier].color},${0.3 + strength * 0.4})` }}
+                  >
                     {current.tier === "Grail" && <Sparkles className="h-3.5 w-3.5" />}
                     {tierStyle[current.tier].label} pull
                   </span>
-                  <h2 className="mt-3 text-[clamp(1.75rem,4.5vw,3rem)] font-bold leading-none tracking-[-0.05em]">{current.name}</h2>
-                  <p className="mt-2 text-fg-muted">
-                    {current.grade} · est. <span className="font-mono text-fg">{usd(current.value)}</span> · buyback <span className="font-mono text-accent">{usd(current.buyback)}</span>
+                  <h2 className="reveal-in mt-3 text-[clamp(1.75rem,4.5vw,3rem)] font-bold leading-none tracking-[-0.05em]" style={{ animationDelay: "120ms" }}>
+                    {current.name}
+                  </h2>
+                  <p className="reveal-in mt-2 text-fg-muted" style={{ animationDelay: "220ms" }}>
+                    {current.grade} · est.{" "}
+                    <span className="font-mono text-fg">
+                      $<CountUp to={current.value} duration={current.tier === "Grail" ? 1800 : 1100} />
+                    </span>{" "}
+                    · buyback <span className="font-mono text-accent">{usd(current.buyback)}</span>
                   </p>
-                  <div className="mt-6 flex flex-wrap justify-center gap-3">
+                  <div className="reveal-in mt-6 flex flex-wrap justify-center gap-3" style={{ animationDelay: "380ms" }}>
                     <Button size="lg" arrow magnetic onClick={next}>
                       {index + 1 < qty ? `Rip pack ${index + 2} of ${qty}` : qty > 1 ? "See results" : "Done"}
                     </Button>
                   </div>
-                  <p className="mt-3 text-xs text-fg-dim">Saved to your vault</p>
+                  <p className="reveal-in mt-3 text-xs text-fg-dim" style={{ animationDelay: "380ms" }}>
+                    Saved to your vault
+                  </p>
                 </div>
               )}
             </div>
