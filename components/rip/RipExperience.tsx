@@ -383,7 +383,7 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
                     style={current ? ({ "--flip-deg": `${flipSpec[current.tier].deg}deg`, "--flip-ms": `${flipSpec[current.tier].ms}ms` } as React.CSSProperties) : undefined}
                   >
                     <span className="slab-face rip-card-back slab-back">
-                      <SlabBack cert={current ? current.id.slice(-7).toUpperCase() : "HYP3"} />
+                      <SlabBack />
                     </span>
                     <span className="slab-face slab-face-back" style={{ filter: `drop-shadow(0 0 ${20 + strength * 30}px rgba(${tierRgb},0.5)) drop-shadow(0 30px 40px rgba(0,0,0,0.8))` }}>
                       {current && <Image src={current.image} alt="" fill sizes="300px" className="object-contain" />}

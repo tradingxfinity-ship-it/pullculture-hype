@@ -1247,124 +1247,42 @@
   right: 5.5%;
   top: 3.5%;
   height: 16%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 3cqw;
-  padding: 0 4cqw;
+  display: grid;
+  place-items: center;
   border-radius: 1.8cqw;
-  background: linear-gradient(180deg, #1b1f1d, #090b0a);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 0.4cqw 1cqw rgba(0, 0, 0, 0.35);
+  background: #0b0d0c;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 .sb-logo {
-  width: 36cqw;
+  width: 34cqw;
   height: auto;
 }
-.sb-label-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 1.2cqw;
-}
-/* Holographic authenticity sticker */
-.sb-holo {
-  width: 15cqw;
-  height: 5cqw;
-  border-radius: 9999px;
-  background: linear-gradient(110deg, #8ff7c4, #a99bff 30%, #ffd88a 55%, #7fe0ff 80%, #8ff7c4);
-  background-size: 220% 100%;
-  box-shadow: inset 0 0 0 0.4cqw rgba(255, 255, 255, 0.45);
-  animation: sb-holo 3.2s linear infinite;
-}
-@keyframes sb-holo {
-  to { background-position: -220% 0; }
-}
-.sb-barcode {
-  width: 26cqw;
-  height: 4.2cqw;
-  background: repeating-linear-gradient(90deg, #f2f4f3 0 0.45cqw, transparent 0.45cqw 0.8cqw, #f2f4f3 0.8cqw 1.6cqw, transparent 1.6cqw 2cqw, #f2f4f3 2cqw 2.3cqw, transparent 2.3cqw 3.1cqw);
-  opacity: 0.85;
-}
-.sb-cert {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 2.6cqw;
-  line-height: 1;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
-}
-/* The card back behind the window: engraved rings and spokes around a
-   glowing medallion, inside a fine foil frame */
+/* The card back behind the window: dark, with a soft glow behind the mark */
 .sb-window {
   position: absolute;
   left: 7%;
   right: 7%;
   top: 23%;
   bottom: 3.5%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 7cqw 0 6cqw;
+  display: grid;
+  place-items: center;
   border-radius: 1.6cqw;
-  background:
-    radial-gradient(circle at 50% 47%, rgba(117, 251, 181, 0.34), transparent 40%),
-    repeating-radial-gradient(circle at 50% 47%, rgba(117, 251, 181, 0.11) 0 0.25cqw, transparent 0.25cqw 2.6cqw),
-    repeating-conic-gradient(from 0deg at 50% 47%, rgba(255, 255, 255, 0.04) 0deg 3deg, transparent 3deg 10deg),
-    linear-gradient(165deg, #10201a, #040706 55%, #0b1611);
-  box-shadow: 0 0 0 0.6cqw rgba(255, 255, 255, 0.4), inset 0 0 0 1px rgba(0, 0, 0, 0.5), inset 0 0 6cqw rgba(0, 0, 0, 0.6);
+  background: radial-gradient(circle at 50% 46%, rgba(117, 251, 181, 0.22), transparent 55%), #070a09;
+  box-shadow: 0 0 0 0.6cqw rgba(255, 255, 255, 0.4), inset 0 0 0 1px rgba(0, 0, 0, 0.5);
 }
-.sb-corners {
-  position: absolute;
-  inset: 4.5cqw;
-  border: 1px solid rgba(117, 251, 181, 0.32);
-  border-radius: 1cqw;
-  pointer-events: none;
-  /* corner ticks */
-  background:
-    linear-gradient(#75fbb5, #75fbb5) 0 0 / 4cqw 1px no-repeat,
-    linear-gradient(#75fbb5, #75fbb5) 0 0 / 1px 4cqw no-repeat,
-    linear-gradient(#75fbb5, #75fbb5) 100% 0 / 4cqw 1px no-repeat,
-    linear-gradient(#75fbb5, #75fbb5) 100% 0 / 1px 4cqw no-repeat,
-    linear-gradient(#75fbb5, #75fbb5) 0 100% / 4cqw 1px no-repeat,
-    linear-gradient(#75fbb5, #75fbb5) 0 100% / 1px 4cqw no-repeat,
-    linear-gradient(#75fbb5, #75fbb5) 100% 100% / 4cqw 1px no-repeat,
-    linear-gradient(#75fbb5, #75fbb5) 100% 100% / 1px 4cqw no-repeat;
+.sb-mark {
+  width: 46cqw;
+  height: auto;
 }
-.sb-kicker,
 .sb-cta {
-  position: relative;
+  position: absolute;
+  bottom: 8cqw;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 2.7cqw;
   line-height: 1;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-}
-.sb-kicker {
-  color: rgba(117, 251, 181, 0.75);
-}
-.sb-cta {
-  color: rgba(255, 255, 255, 0.62);
-}
-.sb-medallion {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 50cqw;
-  aspect-ratio: 1;
-  border-radius: 9999px;
-  background: radial-gradient(circle, #0b1611 0%, #050807 70%);
-  box-shadow:
-    0 0 0 0.5cqw rgba(117, 251, 181, 0.6),
-    0 0 0 1.6cqw rgba(117, 251, 181, 0.08),
-    0 0 0 1.8cqw rgba(117, 251, 181, 0.35),
-    0 0 7cqw rgba(117, 251, 181, 0.35),
-    inset 0 0 5cqw rgba(117, 251, 181, 0.22);
-}
-.sb-mark {
-  width: 34cqw;
-  height: auto;
-  filter: drop-shadow(0 0 1.5cqw rgba(117, 251, 181, 0.45));
+  color: rgba(255, 255, 255, 0.55);
 }
 /* Holo light that sweeps across the back while it waits */
 .rip-back-sheen {
