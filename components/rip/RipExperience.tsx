@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Hand, RotateCcw, Sparkles, Wallet, Zap } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Logo from "@/components/ui/Logo";
+import SlabDepth from "@/components/ui/SlabDepth";
 import Tag from "@/components/ui/Tag";
 import { useToast } from "@/components/ui/Toast";
 import { useAccount } from "@/components/account/AccountProvider";
@@ -331,18 +332,19 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
                     tabIndex={phase === "reveal" ? 0 : -1}
                     aria-hidden={phase !== "reveal"}
                     aria-label={flipped && current ? `${current.name}, ${current.grade}` : "Flip card to reveal"}
-                    className={`card-flip relative block h-full w-full ${flipped ? "is-flipped" : ""} ${phase === "reveal" && !flipped ? "card-hint cursor-pointer" : ""}`}
+                    className={`card-flip slab-3d relative block h-full w-full ${flipped ? "is-flipped" : ""} ${phase === "reveal" && !flipped ? "card-hint cursor-pointer" : ""}`}
                   >
-                    <span className="card-face rip-card-back card-back-pattern grid place-items-center overflow-hidden rounded-md">
+                    <span className="slab-face rip-card-back card-back-pattern grid place-items-center overflow-hidden rounded-[4.5cqw]">
                       <span className="flex flex-col items-center gap-4">
                         <Logo link={false} className="h-7 w-auto" />
                         <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">Tap to reveal</span>
                       </span>
                     </span>
-                    <span className="card-face card-face-front" style={{ filter: `drop-shadow(0 0 ${20 + strength * 30}px rgba(${tierRgb},0.5)) drop-shadow(0 30px 40px rgba(0,0,0,0.8))` }}>
+                    <span className="slab-face slab-face-back" style={{ filter: `drop-shadow(0 0 ${20 + strength * 30}px rgba(${tierRgb},0.5)) drop-shadow(0 30px 40px rgba(0,0,0,0.8))` }}>
                       {current && <Image src={current.image} alt="" fill sizes="300px" className="object-contain" />}
                       {flipped && <span className="rip-glare" aria-hidden />}
                     </span>
+                    <SlabDepth />
                   </button>
                 </div>
               </div>

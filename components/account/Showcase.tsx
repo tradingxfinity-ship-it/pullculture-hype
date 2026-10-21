@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
 import type { VaultItem } from "@/lib/account";
 import { usd } from "@/lib/data";
+import SlabDepth from "@/components/ui/SlabDepth";
 
 // Public-profile showcase set as a lit display case: spotlights flicker on
 // as it scrolls into view, slabs rise onto glowing pedestals and float over
@@ -48,17 +49,18 @@ function Slab({ v, rank, angle, showValue }: { v: VaultItem; rank: number; angle
           <div className="sc-tilt">
             {featured ? (
               // Turntable: same slab on both faces, paused while hovered
-              <div className="sc-spin">
-                <div className="sc-face">
+              <div className="sc-spin slab-3d">
+                <div className="slab-face">
                   <Image src={v.image} alt={`${v.name}, ${v.grade}`} fill sizes="260px" className="object-contain" />
                   <span className="sc-holo" aria-hidden />
                   <span className="sc-sweep" aria-hidden />
                   <span className="sc-glare" aria-hidden />
                 </div>
-                <div className="sc-face sc-face-back" aria-hidden>
+                <div className="slab-face slab-face-back" aria-hidden>
                   <Image src={v.image} alt="" fill sizes="260px" className="object-contain" />
                   <span className="sc-sweep" />
                 </div>
+                <SlabDepth />
               </div>
             ) : (
               <>
@@ -71,13 +73,14 @@ function Slab({ v, rank, angle, showValue }: { v: VaultItem; rank: number; angle
           </div>
           <div className="sc-reflection" aria-hidden>
             {featured ? (
-              <div className="sc-spin">
-                <div className="sc-face">
+              <div className="sc-spin slab-3d">
+                <div className="slab-face">
                   <Image src={v.image} alt="" fill sizes="200px" className="object-contain" />
                 </div>
-                <div className="sc-face sc-face-back">
+                <div className="slab-face slab-face-back">
                   <Image src={v.image} alt="" fill sizes="200px" className="object-contain" />
                 </div>
+                <SlabDepth />
               </div>
             ) : (
               <Image src={v.image} alt="" fill sizes="200px" className="object-contain" />
