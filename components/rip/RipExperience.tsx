@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Hand, RotateCcw, Sparkles, Wallet, Zap } from "lucide-react";
 import Button from "@/components/ui/Button";
 import CountUp from "@/components/ui/CountUp";
-import Logo from "@/components/ui/Logo";
 import SlabDepth from "@/components/ui/SlabDepth";
 import Tag from "@/components/ui/Tag";
 import { useToast } from "@/components/ui/Toast";
@@ -14,6 +13,7 @@ import { useAccount } from "@/components/account/AccountProvider";
 import { pullTiers, usd, type Pack } from "@/lib/data";
 import type { VaultItem } from "@/lib/account";
 import FxCanvas, { type BurstOpts, type FxHandle } from "./FxCanvas";
+import SlabBack from "./SlabBack";
 
 // Demo pack opening. Pulls are drawn locally, weighted by the tier odds the
 // site lists, and land in the demo vault. Replace `drawPull` with the
@@ -382,12 +382,8 @@ export default function RipExperience({ pack, qty }: { pack: Pack; qty: number }
                     className={`card-flip slab-3d relative block h-full w-full ${flipped ? "is-flipped" : ""} ${phase === "reveal" && !flipped ? "card-hint cursor-pointer" : ""}`}
                     style={current ? ({ "--flip-deg": `${flipSpec[current.tier].deg}deg`, "--flip-ms": `${flipSpec[current.tier].ms}ms` } as React.CSSProperties) : undefined}
                   >
-                    <span className="slab-face rip-card-back card-back-pattern grid place-items-center overflow-hidden rounded-[4.5cqw]">
-                      <span className="rip-back-sheen" aria-hidden />
-                      <span className="relative flex flex-col items-center gap-4">
-                        <Logo link={false} className="h-7 w-auto" />
-                        <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg-muted">Tap to reveal</span>
-                      </span>
+                    <span className="slab-face rip-card-back slab-back">
+                      <SlabBack cert={current ? current.id.slice(-7).toUpperCase() : "HYP3"} />
                     </span>
                     <span className="slab-face slab-face-back" style={{ filter: `drop-shadow(0 0 ${20 + strength * 30}px rgba(${tierRgb},0.5)) drop-shadow(0 30px 40px rgba(0,0,0,0.8))` }}>
                       {current && <Image src={current.image} alt="" fill sizes="300px" className="object-contain" />}
